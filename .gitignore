@@ -3,3 +3,5 @@ bower_components
 .sublime-gulp.cache
 .sass-cache
 sftp-config.json
+gulpfile.js
+package.json
