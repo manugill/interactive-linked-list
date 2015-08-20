@@ -11,7 +11,7 @@ var gulp = require('gulp'),
 
 
 /* Styles */
-// App, includes Foundation and site
+// App CSS compile
 gulp.task('styles.app', function(){
   gulp.src([
       'sass/*.sass',
