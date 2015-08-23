@@ -1,32 +1,76 @@
 // Variables
 $primary: #6ed6b6
+$dark: #000
 $light: #fff
 
-body
-	background: rgba($primary, 0.1)
+html 
+	box-sizing: border-box
+*, *:before, *:after
+	box-sizing: inherit
 
-#editor
+a
+	text-decoration: none
+	color: #999
+
+
+body
+	background: #eee
+
+.options
+	padding: 20px
+	position: absolute
+	top: 0
+	left: 0
+	width: 200px
+	height: 100%
+	background: #fff
+	border-right: 1px solid rgba($primary, 0.4)
+	text-align: center
+
+.add-node
+	position: relative
+	z-index: 5
+	display: block
+	width: 100%
+	line-height: 50px
+	border: 2px solid #eee
+
+.editor
+	shape-rendering: crispEdges
+	position: relative
+	z-index: 2
 	display: block
 	width: 100%
 	height: 100%
 
-#editor
 	g
 		transition: 0.5s all ease
+		cursor: grab
 
-	rect
-		fill: #fff
-		stroke: rgba($primary, 0.4)
-		stroke-width: 1px
+		rect
+			fill: rgba($light, 0.9)
+			stroke: rgba($primary, 0.6)
+			stroke-width: 1px
 
-	line.pointer
-		stroke: #000
-		stroke-width: 2px
-
-	line.divider
-		stroke-width: 1px
-		stroke: rgba($primary, 0.4)
-
-		&:hover
-			rect
+			&:nth-of-type(2)
 				opacity: 0.8
+
+		circle
+			shape-rendering: geometricPrecision
+			fill: #fff
+			stroke: #999
+			stroke-width: 1px
+
+	line
+		&.pointer
+			shape-rendering: geometricPrecision
+			stroke: $dark
+			stroke-width: 1px
+
+		&.divider
+			stroke-width: 1px
+			stroke: rgba($primary, 0.4)
+
+			&:hover
+				rect
+					opacity: 0.8

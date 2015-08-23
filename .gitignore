@@ -5,3 +5,4 @@ bower_components
 sftp-config.json
 gulpfile.js
 package.json
+/sublime-gulp.log
