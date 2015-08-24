@@ -12,7 +12,7 @@ def.attrGroup = {
 	transform: 't0,0'
 };
 def.attrRect = {
-	class: 'rect'
+	//class: 'rect'
 };
 def.attrCircle = {
 	class: 'circle'
