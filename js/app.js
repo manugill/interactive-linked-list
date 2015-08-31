@@ -41,7 +41,7 @@ $('#insert').submit(function(e) {
 $('#search').submit(function(e) {
 	e.preventDefault();
 
-	var value = parseInt($('#search').val());
+	var value = parseInt($('#search-text').val());
 	current = head;
 	current.highlight = true;
 
@@ -58,7 +58,7 @@ $('#search').submit(function(e) {
 			refreshNodes();
 
 			// Found the value
-			if ( current.value == searching ) {
+			if ( current.value == value ) {
 				alert('Found');
 				clearInterval(searching);
 				current.highlight = false;
@@ -76,7 +76,7 @@ $('#search').submit(function(e) {
 $('#remove').submit(function(e) {
 	e.preventDefault();
 
-	var searchFor = parseInt($('#search').val());
+	var searchFor = parseInt($('#search-text').val());
 	current = head;
 
 	current.highlight = true;
