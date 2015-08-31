@@ -21,6 +21,12 @@ var isEmpty = function(obj) {
 	return true;
 }
 
+/* SVG */
+
+// Get group element by node
+
+/* Geometry */
+
 // Closest point on rectangle point a given point
 function nearestRectPoint(point, rect) {
 	var loc = {};
