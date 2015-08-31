@@ -2,6 +2,61 @@
  * Contains Foundation styling overrides
  */
 
+input:not([type]), input[type=text], input[type=password], input[type=date], input[type=datetime], input[type=datetime-local], input[type=month], input[type=week], input[type=email], input[type=number], input[type=search], input[type=tel], input[type=time], input[type=url], input[type=color], select
+	padding:0 10px
+	text-align: center
+	font-size: 20px
+	line-height: 60px
+	height: 60px
+	text-shadow: none
+	margin-bottom: 0
+	border-radius: $radius
+
 button, .button
-	padding: 25px 10px
 	width: 100%
+	padding: 0 10px
+	border-width: 1px
+	line-height: 58px
+	height: 60px
+	font-size: 30px
+	margin-bottom: 0
+	border-radius: $radius
+	transition: $transition
+
+	&.hollow
+		background: none !important
+		border-color: rgba($button-border-color, 0.5)
+		color: $button-bg-color
+		&:hover
+			color: $button-bg-hover
+			background: rgba(#000, 0.05) !important
+
+		&.secondary
+			color: $secondary-button-bg-color
+			border-color: rgba($secondary-button-border-color, 0.5)
+			&:hover
+				color: $secondary-button-bg-hover
+
+		&.success
+			color: $success-button-bg-color
+			border-color: rgba($success-button-border-color, 0.5)
+			&:hover
+				color: $success-button-bg-hover
+
+		&.warning
+			color: $warning-button-bg-color
+			border-color: rgba($warning-button-border-color, 0.5)
+			&:hover
+				color: $warning-button-bg-hover
+
+		&.alert
+			color: $alert-button-bg-color
+			border-color: rgba($alert-button-border-color, 0.5)
+			&:hover
+				color: $alert-button-bg-hover
+
+		&.info
+			color: $info-button-bg-color
+			border-color: rgba($info-button-border-color, 0.5)
+			&:hover
+				color: $info-button-bg-hover

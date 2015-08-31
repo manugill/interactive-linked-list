@@ -1,8 +1,8 @@
 /* Definitions */
 var n = []; // global container of all nodes
-var head = undefined;
-var current = undefined; // container for any node with actions being performed
 var nMax = 0;
+var current = undefined; // container for any node with actions being performed
+var head = undefined;
 
 // Defaults
 var def = {};

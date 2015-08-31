@@ -4,6 +4,7 @@ function node(value, x, y, next) {
 	this.id = nMax;
 	this.value = value;
 	this.next = next;
+	this.disabled = false;
 	this.dragging = false;
 	this.highlight = false;
 	this.pointerAt = false;
@@ -44,21 +45,37 @@ function node(value, x, y, next) {
 	this.c1.appendTo(this.inner);
 
 	// Connected line, not appened to the group
-	this.pointer = s.line();
+	this.pointer = s.polyline();
 	this.pointer.attr(def.attrPointer);
 	this.pointer.appendTo(base.pointers);
 
 	/* Functions */
-	// Select group element by id for updates (objects die quickly)
+	// Select group element by id for updates (objects die)
 	this.get = function() {
 		return document.getElementById(this.group.attr('id'));
-	}
+	};
 
 	this.setClass = function(classes) {
 		var element = this.get();
 		element.setAttribute('class', def.attrNode.class + ' ' + classes);
-	}
+	};
 
+	this.refresh = function() {
+		this.updateLine();
+
+		// select using id because objects die out when location is changed
+		var element = this.get();
+		var towards = this.pointerOn;
+		var classes = '';
+
+		if (this.dragging == 'left')
+			classes += 'dragging';
+
+		if (this.highlight)
+			classes += 'highlight';
+
+		this.setClass(classes);
+	}
 
 	// Get location
 	this.loc = function() {
@@ -71,7 +88,7 @@ function node(value, x, y, next) {
 		loc.end.y = loc.y + def.nodeHeight;
 
 		return loc;
-	}
+	};
 
 	// Connect nodes
 	this.connect = function(nextNode) {
@@ -86,35 +103,36 @@ function node(value, x, y, next) {
 	// Update line
 	this.updateLine = function () {
 		// Pointer location
-		var to = {};
-		var from = this.loc();
-		from.x = from.x + def.nodeWidth - def.nodeWidth/4;
-		from.y = from.y + def.nodeHeight - def.nodeHeight/2;
+		var fromLoc = this.loc();
+		var toLoc = false;
+		fromLoc.x = fromLoc.x + def.nodeWidth - def.nodeWidth/4;
+		fromLoc.y = fromLoc.y + def.nodeHeight - def.nodeHeight/2;
 
-		// Draw line to
-		if ( this.pointerAt ) {
-			to = this.pointerAt;
+		var from = fromLoc.x + ',' + fromLoc.y
+		var to = '';
+
+		// Draw line to something
+		if (this.pointerAt)
+			toLoc = this.pointerAt;
+		else if ( this.next !== undefined )
+			toLoc = nearestRectPoint(fromLoc, this.next.loc());
+
+		if (toLoc) {
+			to = toLoc.x + ',' + toLoc.y;
 		} else {
-			if ( this.next !== undefined ) {
-				toLoc = this.next.loc();
-				to = nearestRectPoint(from, toLoc);
-			} else {
-				// Point to the same location as the from
-				to = from;
-			}
+			to = (fromLoc.x + 40) + ',' + (fromLoc.y) + ' ' +
+			     (fromLoc.x + 40) + ',' + (fromLoc.y + 40)
 		}
 
 		this.pointer.attr({
-			x1: from.x,
-			y1: from.y,
-			x2: to.x,
-			y2: to.y
+			points: from + ' ' + to
 		});
 	};
 
 	// Do drag stuff
 	this.group.drag(function(dx, dy, posX, posY, e) {
 		var current = this.p; // get parent node of the group
+
 		var loc = current.loc();
 		var mouseLoc = {x: posX, y: posY};
 
@@ -127,6 +145,9 @@ function node(value, x, y, next) {
 		}
 
 		if (current.dragging == 'left') {
+			if (current.disabled) // don't allow drag if disabled
+				return false;
+
 			current.pointerAt = false;
 
 			this.attr({
@@ -159,6 +180,8 @@ function node(value, x, y, next) {
 		if (current.pointerOn) {
 			current.pointerOn.highlight = false;
 			current.connect(current.pointerOn);
+		} else if (current.pointerAt) {
+			current.next = undefined;
 		}
 
 		current.dragging = false;
@@ -170,28 +193,4 @@ function node(value, x, y, next) {
 
 	// Done?
 	this.updateLine();
-}
-
-
-// Refresh nodes for any state updates
-function refreshNodes() {
-	n.forEach(function(node) {
-		node.updateLine();
-
-		// select using id because objects die out when location is changed
-		var element = node.get();
-		var towards = node.pointerOn;
-		var classes = '';
-
-		if (node.dragging == 'left') {
-			classes += 'dragging';
-		}
-
-		if (node.highlight)
-			classes += 'highlight';
-
-		node.setClass(classes);
-
-
-	});
 }

@@ -7,13 +7,15 @@
 	<!--link href='https://fonts.googleapis.com/css?family=Roboto:400,500,700,300' rel='stylesheet' type='text/css'-->
 
 	<!-- CSS -->
+	<link rel="stylesheet" href="css/ionicons.css">
 	<link rel="stylesheet" href="css/normalize.css">
+	<link rel="stylesheet" href="css/jquery.growl.css">
 	<link rel="stylesheet" href="css/app.css">
 
 	<!-- JS -->
 	<script src="js/vendor/jquery-2.1.4.min.js"></script>
 	<script src="js/vendor/underscore-min.js"></script>
-	<script src="js/vendor/jquery.nearest.js"></script>
+	<script src="js/vendor/jquery.growl.js"></script>
 	<script src="js/vendor/snap.svg.js"></script>
 
 </head>
@@ -23,53 +25,82 @@
 	<div class="wrapper">
 
 		<div class="options">
-			<button class="insert success">Prepend Node</button>
+			<h4>Insert</h4>
+			<form id="insert" class="row collapse">
+				<div class="small-6 columns">
+					<input type="text" id="insert-text" name="search" value="30">
+				</div>
+				<div class="small-6 columns">
+					<button type="submit" class="success hollow"><i class="ion-ios-plus"></i></button>
+				</div>
+			</form>
 
 			<hr>
 
-			<input type="text" id="search" name="search" value="16">
-			<button class="search small">Search</button>
+			<h4>Search</h4>
+			<form id="search" class="row collapse">
+				<div class="small-6 columns">
+					<input type="text" id="search-text" name="search" value="16">
+				</div>
+				<div class="small-6 columns">
+					<button type="submit" class="hollow"><i class="ion-ios-search-strong"></i></button>
+				</div>
+			</form>
+
+			<hr>
+
+			<h4>Remove</h4>
+			<form id="remove" class="row collapse">
+				<div class="small-6 columns">
+					<input type="text" id="remove-text" name="remove" value="16">
+				</div>
+				<div class="small-6 columns">
+					<button type="submit" class="warning hollow"><i class="ion-ios-close"></i></button>
+				</div>
+			</form>
 
 		</div>
 
 		<svg class="editor">
 			<!-- Markers, Filters & Animations -->
-			<marker id="triangle" viewBox="0 0 10 10" refX="10" refY="5" markerUnits="strokeWidth" markerWidth="10" markerHeight="10" orient="auto">
-				<path d="M 0 0 L 10 5 L 0 10 z">
-			</marker>
+			<defs>
+				<marker id="triangle" viewBox="0 0 10 10" refX="10" refY="5" markerUnits="strokeWidth" markerWidth="10" markerHeight="10" orient="auto">
+					<path d="M 0 0 L 10 5 L 0 10 z">
+				</marker>
 
-			<filter id="dragging">
-				<feGaussianBlur in="SourceAlpha" stdDeviation="1.75"/>
-				<feOffset dx="0" dy="3" result="offsetblur"/>
-				<feFlood flood-color="rgba(0,0,0,0.2)"/>
-				<feComposite in2="offsetblur" operator="in"/>
-				<feMerge>
-					<feMergeNode/>
-					<feMergeNode in="SourceGraphic"/>
-				</feMerge>
-			</filter>
+				<filter id="dragging" x="-50%" y="-50%" width="200%" height="200%">
+					<feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
+					<feOffset dx="0" dy="6" result="offsetblur"/>
+					<feFlood flood-color="rgba(0,0,0,0.3)"/>
+					<feComposite in2="offsetblur" operator="in"/>
+					<feMerge>
+						<feMergeNode/>
+						<feMergeNode in="SourceGraphic"/>
+					</feMerge>
+				</filter>
 
-			<filter id="highlight">
-				<feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
-				<feOffset dx="0" dy="0" result="offsetblur"/>
-				<feFlood flood-color="#42b4e6"/>
-				<feComposite in2="offsetblur" operator="in"/>
-				<feMerge>
-					<feMergeNode/>
-					<feMergeNode in="SourceGraphic"/>
-				</feMerge>
-			</filter>
+				<filter id="highlight" x="-50%" y="-50%" width="200%" height="200%">
+					<feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+					<feOffset dx="0" dy="0" result="offsetblur"/>
+					<feFlood flood-color="#fff"/>
+					<feComposite in2="offsetblur" operator="in"/>
+					<feMerge>
+						<feMergeNode/>
+						<feMergeNode in="SourceGraphic"/>
+					</feMerge>
+				</filter>
+
+			</defs>
 
 			<!-- Base Elements -->
-			<g id="head"></g>
 
 			<!-- Dynamic stuff happens around here -->
 		</svg>
 
 	</div>
 
-	<script src="js/base.js"></script>
 	<script src="js/helpers.js"></script>
+	<script src="js/base.js"></script>
 	<script src="js/node.js"></script>
 	<script src="js/app.js"></script>
 
