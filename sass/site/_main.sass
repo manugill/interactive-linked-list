@@ -1,0 +1,90 @@
+/**
+ * Options
+ */
+
+.options
+	padding: 20px
+	position: absolute
+	top: 0
+	left: 0
+	width: 200px
+	height: 100%
+	background: #fff
+	border-right: 1px solid rgba($primary, 0.4)
+	text-align: center
+	z-index: 20
+
+	input[type="text"]
+		margin-bottom: 0
+		border-bottom: 0
+
+	hr
+		margin: 40px 0
+		height: 0
+		border: 0 solid #eee
+		border-top-width: 1px
+
+/**
+ * Editor
+ */
+.editor
+	shape-rendering: crispEdges
+	position: relative
+	z-index: 2
+	display: block
+	width: 100%
+	height: 100%
+
+	g
+		transition: 0.5s transform ease
+		cursor: grab
+
+		&.dragging
+			filter: url(#dragging)
+
+		&.highlight
+			filter: url(#highlight)
+			opacity: 0.8
+
+			rect
+				fill: rgba($light, 1)
+
+		rect
+			fill: rgba($light, 0.8)
+			stroke: rgba($primary, 0.6)
+			stroke-width: 1px
+
+			&:nth-of-type(2)
+				cursor: default
+
+
+		circle
+			shape-rendering: geometricPrecision
+			fill: #fff
+			stroke: #999
+			stroke-width: 1px
+
+		text
+			alignment-baseline: middle
+			text-anchor: middle
+			font-size: 20px
+
+	path
+		shape-rendering: geometricPrecision
+
+	line
+		shape-rendering: geometricPrecision
+
+		&.pointer
+			stroke: $dark
+			stroke-width: 1px
+			marker-end: url(#triangle)
+
+		&.divider
+			shape-rendering: crispEdges
+			stroke-width: 1px
+			stroke: rgba($primary, 0.4)
+
+			&:hover
+				rect
+					opacity: 0.8

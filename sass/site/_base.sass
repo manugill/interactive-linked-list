@@ -1,0 +1,55 @@
+/**
+ * Contains base styling, typography, general elements and utility styling
+ */
+
+/* Typography */
+body
+	overflow-x: hidden
+	min-width: u(320)
+	font-family: $family
+	color: $dark
+	background: $background
+
+h1, h2, h3, h4, h5, h6
+	font-family: inherit
+	font-weight: 700
+	color: inherit
+	line-height: 1.4
+	margin-top: u(34)
+	margin-bottom: u(20)
+
+a
+	color: $primary
+	transition: $transition
+
+	&:hover, &:focus, &:active
+		color: lighten($primary, 10)
+		text-decoration: underline
+
+
+/* General */
+iframe
+	max-width: 100%
+	border: 0
+
+
+/* Helpers */
+.clear
+	&:before, &:after
+		content: ""
+		display: table
+
+	&:after
+		clear: both // not really needed
+
+.vertical-align
+	position: absolute
+	top: 50%
+	transform: translateY(-50%)
+
+.screen-reader-text
+	position: absolute !important
+	width: 1px
+	height: 1px
+	clip: rect(1px 1px 1px 1px)
+	clip: rect(1px, 1px, 1px, 1px)
