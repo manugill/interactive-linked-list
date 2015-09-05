@@ -9,13 +9,12 @@
 	<!-- CSS -->
 	<link rel="stylesheet" href="css/ionicons.css">
 	<link rel="stylesheet" href="css/normalize.css">
-	<link rel="stylesheet" href="css/jquery.growl.css">
 	<link rel="stylesheet" href="css/app.css">
 
 	<!-- JS -->
 	<script src="js/vendor/jquery-2.1.4.min.js"></script>
 	<script src="js/vendor/underscore-min.js"></script>
-	<script src="js/vendor/jquery.growl.js"></script>
+	<script src="js/vendor/notify.js"></script>
 	<script src="js/vendor/snap.svg.js"></script>
 
 </head>
@@ -28,7 +27,7 @@
 			<h4>Insert</h4>
 			<form id="insert" class="row collapse">
 				<div class="small-6 columns">
-					<input type="text" id="insert-text" name="search" value="30">
+					<input type="text" id="insert-text" value="30">
 				</div>
 				<div class="small-6 columns">
 					<button type="submit" class="success hollow"><i class="ion-ios-plus"></i></button>
@@ -40,7 +39,7 @@
 			<h4>Search</h4>
 			<form id="search" class="row collapse">
 				<div class="small-6 columns">
-					<input type="text" id="search-text" name="search" value="16">
+					<input type="text" id="search-text" value="16">
 				</div>
 				<div class="small-6 columns">
 					<button type="submit" class="hollow"><i class="ion-ios-search-strong"></i></button>
@@ -52,7 +51,7 @@
 			<h4>Remove</h4>
 			<form id="remove" class="row collapse">
 				<div class="small-6 columns">
-					<input type="text" id="remove-text" name="remove" value="16">
+					<input type="text" id="remove-text" value="40">
 				</div>
 				<div class="small-6 columns">
 					<button type="submit" class="warning hollow"><i class="ion-ios-close"></i></button>
@@ -71,7 +70,7 @@
 				<filter id="dragging" x="-50%" y="-50%" width="200%" height="200%">
 					<feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
 					<feOffset dx="0" dy="6" result="offsetblur"/>
-					<feFlood flood-color="rgba(0,0,0,0.3)"/>
+					<feFlood flood-color="rgba(0,0,0,0.2)"/>
 					<feComposite in2="offsetblur" operator="in"/>
 					<feMerge>
 						<feMergeNode/>

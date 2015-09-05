@@ -3,10 +3,12 @@ function node(value, x, y, next) {
 	nMax++;
 	this.id = nMax;
 	this.value = value;
+	this.prev = false;
 	this.next = next;
 	this.disabled = false;
 	this.dragging = false;
 	this.highlight = false;
+	this.highlightLine = false;
 	this.pointerAt = false;
 	this.pointerOn = false;
 
@@ -28,25 +30,33 @@ function node(value, x, y, next) {
 	this.inner.appendTo(this.group);
 
 	// Inner elements
+	// Place to the left
 	this.r1 = s.rect(0, 0, def.nodeWidth/2, def.nodeHeight);
 	this.r1.attr(def.attrRect);
 	this.r1.appendTo(this.inner);
+
+	// Place to left of previous + extra spacing
+	this.r2 = s.rect(def.nodeWidth/2 + def.nodeSpace, 0, def.nodeWidth/2, def.nodeHeight);
+	this.r2.attr(def.attrRect);
+	this.r2.appendTo(this.inner);
 
 	this.t = s.text(def.nodeWidth/4, def.nodeHeight/2, this.value)
 	this.t.attr(def.attrText);
 	this.t.appendTo(this.inner);
 
-	this.r2 = s.rect(def.nodeWidth/2, 0, def.nodeWidth/2, def.nodeHeight);
-	this.r2.attr(def.attrRect);
-	this.r2.appendTo(this.inner);
-
-	this.c1 = s.circle(def.nodeWidth - def.nodeWidth/4, def.nodeHeight - def.nodeHeight/2, 3);
+	// Account for extra spacing
+	this.c1X = def.nodeWidth + def.nodeSpace - def.nodeWidth/4;
+	this.c1Y = def.nodeHeight - def.nodeHeight/2;
+	this.c1 = s.circle(this.c1X, this.c1Y, 3);
 	this.c1.attr(def.attrCircle);
 	this.c1.appendTo(this.inner);
 
 	// Connected line, not appened to the group
 	this.pointer = s.polyline();
 	this.pointer.attr(def.attrPointer);
+	this.pointer.attr({
+		id: 'np' + nMax
+	});
 	this.pointer.appendTo(base.pointers);
 
 	/* Functions */
@@ -54,10 +64,23 @@ function node(value, x, y, next) {
 	this.get = function() {
 		return document.getElementById(this.group.attr('id'));
 	};
+	this.getPointer = function() {
+		return document.getElementById(this.pointer.attr('id'));
+	};
 
 	this.setClass = function(classes) {
 		var element = this.get();
 		element.setAttribute('class', def.attrNode.class + ' ' + classes);
+	};
+
+	this.setPointerClass = function(classes) {
+		var element = this.getPointer();
+		element.setAttribute('class', def.attrPointer.class + ' ' + classes);
+	};
+
+	this.delete = function () {
+		this.group.remove();
+		this.pointer.remove();
 	};
 
 	this.refresh = function() {
@@ -70,6 +93,8 @@ function node(value, x, y, next) {
 
 		if (this.dragging == 'left')
 			classes += 'dragging';
+		if (this.dragging == 'right')
+			classes += 'highlight-self';
 
 		if (this.highlight)
 			classes += 'highlight';
@@ -97,19 +122,22 @@ function node(value, x, y, next) {
 		else
 			this.next = nextNode;
 
+		this.next.prev = this;
+
 		refreshNodes();
 	};
 
 	// Update line
 	this.updateLine = function () {
 		// Pointer location
-		var fromLoc = this.loc();
 		var toLoc = false;
-		fromLoc.x = fromLoc.x + def.nodeWidth - def.nodeWidth/4;
-		fromLoc.y = fromLoc.y + def.nodeHeight - def.nodeHeight/2;
-
-		var from = fromLoc.x + ',' + fromLoc.y
 		var to = '';
+		var from = '';
+		var fromLoc = this.loc();
+
+		// Place to the circle center
+		fromLoc.x = fromLoc.x + this.c1X;
+		fromLoc.y = fromLoc.y + this.c1Y;
 
 		// Draw line to something
 		if (this.pointerAt)
@@ -118,15 +146,15 @@ function node(value, x, y, next) {
 			toLoc = nearestRectPoint(fromLoc, this.next.loc());
 
 		if (toLoc) {
-			to = toLoc.x + ',' + toLoc.y;
+			this.pointer.attr({
+				points: [fromLoc.x, fromLoc.y, toLoc.x, toLoc.y]
+			});
 		} else {
-			to = (fromLoc.x + 40) + ',' + (fromLoc.y) + ' ' +
-			     (fromLoc.x + 40) + ',' + (fromLoc.y + 40)
+			this.pointer.attr({
+				points: [fromLoc.x, fromLoc.y, fromLoc.x + 40, fromLoc.y, fromLoc.x + 40, fromLoc.y + 40]
+			});
 		}
 
-		this.pointer.attr({
-			points: from + ' ' + to
-		});
 	};
 
 	// Do drag stuff

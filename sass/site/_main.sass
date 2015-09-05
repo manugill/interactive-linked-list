@@ -1,31 +1,4 @@
 /**
- * Options
- */
-
-.options
-	padding: 20px
-	position: absolute
-	top: 0
-	left: 0
-	width: 200px
-	height: 100%
-	background: #fff
-	border-right: 5px solid rgba($primary, 0.4)
-	z-index: 20
-
-	form.row.collapse
-		.columns
-			&:not(:last-child)
-				&>*
-					border-right: 0
-					border-top-right-radius: 0
-					border-bottom-right-radius: 0
-			&:last-child
-				&>*
-					border-top-left-radius: 0
-					border-bottom-left-radius: 0
-
-/**
  * Editor
  */
 .editor
@@ -42,22 +15,6 @@
 			cursor: pointer
 			color: $primary
 
-			transition: 0.5s transform ease
-
-			&.dragging
-				filter: url(#dragging)
-
-			&.highlight
-				filter: url(#highlight)
-				opacity: 0.9
-
-				rect
-					fill: rgba($light, 1)
-
-			&#head
-				rect:nth-of-type(1), text
-					display: none
-
 			rect
 				fill: $light
 				stroke: $light
@@ -73,10 +30,58 @@
 				stroke-width: 1px
 
 			text
-				alignment-baseline: middle
+				alignment-baseline: central
 				text-anchor: middle
-				font-size: 20px
+				font-family: $family-mono
+				font-size: 25px
+				letter-spacing: -1px
 				fill: $primary
+
+			.inner
+				transform: scale(1) translate(0, 0)
+
+			// Head
+			&#head
+				rect:nth-of-type(1), text
+					display: none
+
+			// Active states
+			&.dragging
+				filter: url(#dragging)
+
+				.inner
+					transform: scale(1.05) translate(-3px, -1.5px)
+
+				rect
+					&:nth-of-type(2)
+						fill: rgba($light, 0.2)
+
+				circle
+					fill: $light
+
+			&.highlight
+				filter: url(#highlight)
+
+				rect
+					fill: rgba($light, 0.3)
+					stroke: $dark
+
+					&:nth-of-type(2)
+						fill: rgba($light, 0.3)
+
+				circle
+					fill: $light
+
+				text
+					fill: $light
+
+			&.highlight-self
+				rect
+					&:nth-of-type(2)
+						fill: rgba($light, 0.3)
+
+				circle
+					fill: $light
 
 	path
 		shape-rendering: geometricPrecision

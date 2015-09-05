@@ -7,8 +7,9 @@ var head = undefined;
 // Defaults
 var def = {};
 
-def.nodeWidth = 110;
-def.nodeHeight = 55;
+def.nodeWidth = 112;
+def.nodeHeight = 56;
+def.nodeSpace = 3;
 
 def.attrGroup = {
 	transform: 't0,0'

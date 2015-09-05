@@ -60,3 +60,31 @@ button, .button
 			border-color: rgba($info-button-border-color, 0.5)
 			&:hover
 				color: $info-button-bg-hover
+
+
+/**
+ * Options
+ */
+
+.options
+	padding: 20px
+	position: absolute
+	top: 0
+	left: 0
+	width: 200px
+	height: 100%
+	background: #fff
+	border-right: 5px solid rgba($primary, 0.4)
+	z-index: 20
+
+	form.row.collapse
+		.columns
+			&:not(:last-child)
+				&>*
+					border-right: 0
+					border-top-right-radius: 0
+					border-bottom-right-radius: 0
+			&:last-child
+				&>*
+					border-top-left-radius: 0
+					border-bottom-left-radius: 0
