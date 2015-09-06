@@ -47,10 +47,10 @@
 
 			// Active states
 			&.dragging
-				filter: url(#dragging)
+				filter: url('#dragging')
 
 				.inner
-					transform: scale(1.05) translate(-3px, -1.5px)
+					transform: scale(1.05)
 
 				rect
 					&:nth-of-type(2)
@@ -60,7 +60,7 @@
 					fill: $light
 
 			&.highlight
-				filter: url(#highlight)
+				filter: url('#highlight')
 
 				rect
 					fill: rgba($light, 0.3)
@@ -92,7 +92,7 @@
 
 		&.pointer
 			stroke-width: 1px
-			marker-end: url(#triangle)
+			marker-end: url('#triangle')
 
 	polyline
 		fill: none

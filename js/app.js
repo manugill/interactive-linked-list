@@ -1,29 +1,25 @@
-var head = new node('', 200, 50);
 
-n[0] = new node(40, 250, 150);
-head.connect(n[0]);
+var head = new node('', 250, 80);
 head.group.attr({
 	id: 'head'
 });
 
-n[1] = new node(16, 400, 150);
+n[0] = new node(40, 310, 200);
+head.connect(n[0]);
+head.updateLine();
+
+n[1] = new node(16, 490, 200);
 n[0].connect(n[1]);
+n[0].updateLine();
 
+n[2] = new node(55, 490, 320);
+n[1].connect(n[2]);
+n[1].updateLine();
 
-// Refresh nodes for any state updates
-function refreshNodes() {
-	// refresh head and its pointer
-	head.refresh();
+n[3] = new node(72, 660, 320);
+n[2].connect(n[3]);
+n[2].updateLine();
 
-	n.forEach(function(node) {
-		// refresh node and its pointer
-		node.refresh();
-
-	});
-
-	// health check for loops
-	var occurred = [];
-}
 
 
 /* Insert */
@@ -41,13 +37,12 @@ $('#insert').submit(function(e) {
 	n[c] = new node(val, 400, 50);
 	n[c].connect(head.next);
 	head.connect(n[c]);
+	head.updateLine(500);
+	n[c].updateLine(500);
 
-	$node = $('#' + n[c].group.attr('id'));
-	$node.notify(
-	  "I'm left of the box", 
-	  { position:"left" }
-	);
-	$.notify('Node added');
+	noty({
+		text: 'Node added'
+	});
 });
 
 /* Search */
@@ -68,27 +63,36 @@ $('#remove').submit(function(e) {
 });
 
 
-var deleteNode = function (node) {
-	$.notify('Found value, pointed previous to its next');
-	console.log(node);
-	node.prev.connect(node.next);
+var deleteNode = function (node, nodePrev) {
+	setTimeout(function () {
+		noty({
+			text: 'Updated pointer of previous node.'
+		});
 
-	refreshNodes();
+		nodePrev.connect(node.next);
+		nodePrev.updateLine(500);
+	}, 1000);
 
-	setTimeout(function() {
-		$.notify('Garbage collected');
+	setTimeout(function () {
+		noty({
+			text: 'Garbage collected.'
+		});
+
 		n = _.reject(n, function(el) { return el === node; });
 		node.delete();
 
-		refreshNodes;
-
-		console.log(n);
-	}, 500);
+		busy = false;
+	}, 2000);
 }
 
 var searchNode = function (searchVal, action) {
+	if (busy)
+		return false;
+	busy = true;
+
 	// Point to head and highlight
-	current = head;
+	var current = head;
+	var nodePrev = false;
 	current.highlight = true;
 	refreshNodes();
 
@@ -96,6 +100,7 @@ var searchNode = function (searchVal, action) {
 		current.highlight = false;
 
 		if ( current.next ) {
+			nodePrev = current;
 			current = current.next;
 			current.highlight = true;
 
@@ -103,19 +108,38 @@ var searchNode = function (searchVal, action) {
 
 			// Found the value
 			if ( current.value == searchVal ) {
-				clearInterval(searching);
 				current.highlight = false;
 
-				if ( action )
-					action(current);
-				else
-					$.notify('Found node');
+				setTimeout(function () {
+					current.setInnerClass('tada');
+
+					noty({
+						text: 'Node found.',
+						type: 'success'
+					});
+
+					if ( action )
+						action(current, nodePrev);
+					else
+						busy = false;
+				}, 900);
+
+				clearInterval(searching);
 			}
+
 		} else {
-			$.notify('Not found');
-			clearInterval(searching);
+			noty({
+				text: 'Node not found, linked list exhausted.',
+				type: 'error'
+			});
+
 			refreshNodes();
+
+			current.setInnerClass('wobble');
+
+			busy = false;
+			clearInterval(searching);
 		}
 
-	}, 500);
+	}, 900);
 }

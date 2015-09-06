@@ -1,7 +1,7 @@
 /* Helpers */
 // http://stackoverflow.com/questions/4994201/is-object-empty
 var hasOwnProperty = Object.prototype.hasOwnProperty;
-var isEmpty = function(obj) {
+var isEmpty = function (obj) {
 	// null and undefined are "empty"
 	if (obj == null || obj == undefined) return true;
 
@@ -36,16 +36,16 @@ function nearestRectPoint(point, rect) {
 	return loc;
 }
 function minXDistance(point, rect) {
-	if (rect.x > point.x)
-		return rect.x;
+	if (rect.start.x > point.x)
+		return rect.start.x;
 	else if (rect.end.x < point.x)
 		return rect.end.x;
 	else
 		return point.x;
 }
 function minYDistance(point, rect) {
-	if (rect.y > point.y)
-		return rect.y;
+	if (rect.start.y > point.y)
+		return rect.start.y;
 	else if (rect.end.y < point.y)
 		return rect.end.y;
 	else
@@ -53,8 +53,8 @@ function minYDistance(point, rect) {
 }
 
 function isPointOnRect(point, rect) {
-	if ( rect.y < point.y && rect.end.y > point.y
-	     && rect.x < point.x && rect.end.x > point.x )
+	if ( rect.start.y < point.y && rect.end.y > point.y
+	     && rect.start.x < point.x && rect.end.x > point.x )
 		return true;
 	else
 		return false;

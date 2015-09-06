@@ -1,9 +1,11 @@
-// Nodes
+/*
+ * Node object
+ * The primary group element's position is the center, all other elements are aligned around
+ */
 function node(value, x, y, next) {
 	nMax++;
 	this.id = nMax;
 	this.value = value;
-	this.prev = false;
 	this.next = next;
 	this.disabled = false;
 	this.dragging = false;
@@ -13,7 +15,7 @@ function node(value, x, y, next) {
 	this.pointerOn = false;
 
 	// Setup group
-	this.group = s.group(def.attrGroup);
+	this.group = s.group(def.attrNode);
 	this.group.p = this; // link group element to object, for drag events
 	this.group.attr({
 		transform: 't' + x + ',' + y,
@@ -22,31 +24,29 @@ function node(value, x, y, next) {
 	});
 	this.group.appendTo(base.nodes);
 
-	this.inner = s.group();
+	this.inner = s.group(def.attrNodeInner);
 	this.inner.p = this; // link group element to object, for drag events
-	this.inner.attr({
-		class: 'inner'
-	});
+	this.inner.attr();
 	this.inner.appendTo(this.group);
 
 	// Inner elements
-	// Place to the left
-	this.r1 = s.rect(0, 0, def.nodeWidth/2, def.nodeHeight);
+	// Place to negative x + space and half negative y
+	this.r1 = s.rect(-(def.nodeWidth/2 + def.nodeSpace), -def.nodeHeight/2, def.nodeWidth/2, def.nodeHeight);
 	this.r1.attr(def.attrRect);
 	this.r1.appendTo(this.inner);
 
-	// Place to left of previous + extra spacing
-	this.r2 = s.rect(def.nodeWidth/2 + def.nodeSpace, 0, def.nodeWidth/2, def.nodeHeight);
+	// Place at x + space and half negative y
+	this.r2 = s.rect(def.nodeSpace, -def.nodeHeight/2, def.nodeWidth/2, def.nodeHeight);
 	this.r2.attr(def.attrRect);
 	this.r2.appendTo(this.inner);
 
-	this.t = s.text(def.nodeWidth/4, def.nodeHeight/2, this.value)
+	this.t = s.text(-(def.nodeWidth/4), 0, this.value)
 	this.t.attr(def.attrText);
 	this.t.appendTo(this.inner);
 
 	// Account for extra spacing
-	this.c1X = def.nodeWidth + def.nodeSpace - def.nodeWidth/4;
-	this.c1Y = def.nodeHeight - def.nodeHeight/2;
+	this.c1X = def.nodeWidth/2 + def.nodeSpace - def.nodeWidth/4;
+	this.c1Y = 0;
 	this.c1 = s.circle(this.c1X, this.c1Y, 3);
 	this.c1.attr(def.attrCircle);
 	this.c1.appendTo(this.inner);
@@ -61,111 +61,142 @@ function node(value, x, y, next) {
 
 	/* Functions */
 	// Select group element by id for updates (objects die)
-	this.get = function() {
+	this.get = function () {
 		return document.getElementById(this.group.attr('id'));
 	};
-	this.getPointer = function() {
+	this.getPointer = function () {
 		return document.getElementById(this.pointer.attr('id'));
 	};
 
-	this.setClass = function(classes) {
+	this.setClass = function (classes) {
 		var element = this.get();
 		element.setAttribute('class', def.attrNode.class + ' ' + classes);
 	};
 
-	this.setPointerClass = function(classes) {
+	this.setInnerClass = function (classes) {
+		var element = this.get().getElementsByClassName('inner')[0];
+		element.setAttribute('class', def.attrNodeInner.class + ' ' + classes);
+	};
+
+	this.setPointerClass = function (classes) {
 		var element = this.getPointer();
 		element.setAttribute('class', def.attrPointer.class + ' ' + classes);
 	};
 
 	this.delete = function () {
-		this.group.remove();
-		this.pointer.remove();
+		var node = this;
+
+		node.setInnerClass('animated bounceOutDown');
+		node.setPointerClass('animated bounceOutUp');
 	};
 
-	this.refresh = function() {
+	this.refresh = function () {
 		this.updateLine();
 
 		// select using id because objects die out when location is changed
 		var element = this.get();
 		var towards = this.pointerOn;
 		var classes = '';
+		var classesInner = '';
+		var classesPointer = '';
 
-		if (this.dragging == 'left')
-			classes += 'dragging';
-		if (this.dragging == 'right')
-			classes += 'highlight-self';
+		if (this.dragging == 'left') {
+			classes += 'dragging ';
+		} else if (this.dragging == 'right') {
+			classes += 'highlight-self ';
+			classesInner += 'pulse ';
+		}
 
-		if (this.highlight)
-			classes += 'highlight';
+		if (this.highlight) {
+			classes += 'highlight ';
+			classesInner += 'jello ';
+		}
 
 		this.setClass(classes);
+		this.setInnerClass(classesInner);
 	}
 
 	// Get location
-	this.loc = function() {
+	this.loc = function () {
 		var loc = {}; // x and y are the top left point
 		loc.x = this.group.matrix.e;
 		loc.y = this.group.matrix.f;
 
 		loc.end = {}; // end.x and end.y are the bottom right point
-		loc.end.x = loc.x + def.nodeWidth;
-		loc.end.y = loc.y + def.nodeHeight;
+		loc.end.x = loc.x + def.nodeWidth/2 + def.nodeSpace;
+		loc.end.y = loc.y + def.nodeHeight/2;
+
+		loc.start = {}; // end.x and end.y are the bottom right point
+		loc.start.x = loc.x - def.nodeWidth/2 - def.nodeSpace;
+		loc.start.y = loc.y - def.nodeHeight/2;
 
 		return loc;
 	};
 
 	// Connect nodes
-	this.connect = function(nextNode) {
+	this.connect = function (nextNode) {
 		if (nextNode == this)
 			this.next = undefined;
 		else
 			this.next = nextNode;
-
-		this.next.prev = this;
-
-		refreshNodes();
 	};
 
 	// Update line
-	this.updateLine = function () {
-		// Pointer location
+	this.updateLine = function (time, callback) {
+		var node = this;
 		var toLoc = false;
-		var to = '';
-		var from = '';
-		var fromLoc = this.loc();
+		var fromLoc = node.loc();
+		var points = [];
 
 		// Place to the circle center
 		fromLoc.x = fromLoc.x + this.c1X;
 		fromLoc.y = fromLoc.y + this.c1Y;
 
 		// Draw line to something
-		if (this.pointerAt)
+		if (node.pointerAt)
 			toLoc = this.pointerAt;
 		else if ( this.next !== undefined )
 			toLoc = nearestRectPoint(fromLoc, this.next.loc());
 
-		if (toLoc) {
-			this.pointer.attr({
-				points: [fromLoc.x, fromLoc.y, toLoc.x, toLoc.y]
+		if (toLoc)
+			points = [fromLoc.x, fromLoc.y, fromLoc.x, fromLoc.y, toLoc.x, toLoc.y]
+		else
+			points = [fromLoc.x, fromLoc.y, fromLoc.x + 40, fromLoc.y, fromLoc.x + 40, fromLoc.y + 40]
+
+		// Don't animate change or do
+		if (time === undefined) {
+			node.pointer.attr({
+				points: points
 			});
 		} else {
-			this.pointer.attr({
-				points: [fromLoc.x, fromLoc.y, fromLoc.x + 40, fromLoc.y, fromLoc.x + 40, fromLoc.y + 40]
-			});
+			// Get current location
+			var pointsCurrent = node.pointer.attr().points;
+			if (pointsCurrent !== undefined)
+				pointsCurrent = pointsCurrent.split(','); // to array
+			else
+				pointsCurrent = points;
+
+			Snap.animate(pointsCurrent, points, function (val) {
+				node.pointer.attr({
+					points: val
+				});
+			}, time, mina.easeinout, callback);
 		}
 
 	};
 
 	// Do drag stuff
-	this.group.drag(function(dx, dy, posX, posY, e) {
+	this.group.drag(function (dx, dy, posX, posY, e) {
+		if (busy)
+			return;
+
 		var current = this.p; // get parent node of the group
 
 		var loc = current.loc();
 		var mouseLoc = {x: posX, y: posY};
 
 		if ( current.dragging == false ) { // on drag start
-			if (loc.x + def.nodeWidth/2 > posX) { // on the left half the rectangle
+			if (loc.x > posX) { // on the left half the rectangle
 				current.dragging = 'left';
 			} else {
 				current.dragging = 'right';
@@ -189,7 +220,7 @@ function node(value, x, y, next) {
 			current.pointerOn = false;
 			current.highlight = false;
 
-			n.forEach(function(node) {
+			n.forEach(function (node) {
 				if (node != current && isPointOnRect(mouseLoc, node.loc())) {
 					current.pointerOn = node;
 					current.pointerOn.highlight = true;
@@ -199,10 +230,16 @@ function node(value, x, y, next) {
 
 		refreshNodes();
 
-	}, function(dx, dy, posX, posY, e) {
+	}, function (dx, dy, posX, posY, e) {
+		if (busy)
+			return;
+
 		this.data('origTransform', this.transform().local );
 
-	}, function() {
+	}, function () {
+		if (busy)
+			return;
+
 		var current = this.p;
 
 		if (current.pointerOn) {
@@ -212,13 +249,43 @@ function node(value, x, y, next) {
 			current.next = undefined;
 		}
 
-		current.dragging = false;
 		current.pointerAt = false;
 		current.pointerOn = false;
 
-		refreshNodes();
+		if ( current.dragging == 'right') {
+			current.updateLine(300, function () {
+				refreshNodes();
+			});
+			current.dragging = false;
+		} else {
+			current.dragging = false;
+			refreshNodes();
+		}
+
 	});
 
-	// Done?
+
+	/* Done? Do some shindig */
+	this.setPointerClass('bounceInDown');
+	this.setInnerClass('bounceInUp');
 	this.updateLine();
+}
+
+
+
+/*
+ * Global updates
+ * Refresh nodes for any state updates
+ */
+function refreshNodes() {
+	// refresh head and its pointer
+	head.refresh();
+
+	n.forEach(function(node) {
+		// refresh node and its pointer
+		node.refresh();
+	});
+
+	// health check for loops
+	var occurred = [];
 }
