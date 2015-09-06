@@ -20,8 +20,6 @@ n[3] = new node(72, 660, 320);
 n[2].connect(n[3]);
 n[2].updateLine();
 
-
-
 /* Insert */
 $('#insert').submit(function(e) {
 	e.preventDefault();
@@ -43,6 +41,10 @@ $('#insert').submit(function(e) {
 	noty({
 		text: 'Node added'
 	});
+
+	setTimeout(function () {
+		refreshNodes();
+	}, 1000);
 });
 
 /* Search */
@@ -82,6 +84,10 @@ var deleteNode = function (node, nodePrev) {
 		node.delete();
 
 		busy = false;
+
+		setTimeout(function () {
+			refreshNodes();
+		}, 1000);
 	}, 2000);
 }
 

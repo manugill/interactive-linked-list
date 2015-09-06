@@ -5,6 +5,13 @@ var current = undefined; // container for any node with actions being performed
 var head = undefined;
 var busy = false; // used to block operations
 
+var health = {};
+health.loops = [];
+health.duplicate = [];
+var notice = {};
+notice.loops = false;
+notice.duplicates = false;
+
 // Defaults
 var def = {};
 

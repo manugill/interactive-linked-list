@@ -54,8 +54,23 @@ function minYDistance(point, rect) {
 
 function isPointOnRect(point, rect) {
 	if ( rect.start.y < point.y && rect.end.y > point.y
-	     && rect.start.x < point.x && rect.end.x > point.x )
+		 && rect.start.x < point.x && rect.end.x > point.x )
 		return true;
 	else
 		return false;
+}
+
+var findDuplicates = function(list){
+	var seen = [];
+	var result = [];
+
+	list.forEach(function (item) {
+		seen.forEach(function (item_seen) {
+			if (item == item_seen)
+				result.push(item);
+		});
+		seen.push(item);
+	});
+
+	return result;
 }

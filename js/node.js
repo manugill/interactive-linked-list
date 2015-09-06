@@ -88,6 +88,10 @@ function node(value, x, y, next) {
 
 		node.setInnerClass('animated bounceOutDown');
 		node.setPointerClass('animated bounceOutUp');
+
+		setTimeout(function () {
+			refreshNodes();
+		}, 1000);
 	};
 
 	this.refresh = function () {
@@ -187,9 +191,6 @@ function node(value, x, y, next) {
 
 	// Do drag stuff
 	this.group.drag(function (dx, dy, posX, posY, e) {
-		if (busy)
-			return;
-
 		var current = this.p; // get parent node of the group
 
 		var loc = current.loc();
@@ -231,15 +232,9 @@ function node(value, x, y, next) {
 		refreshNodes();
 
 	}, function (dx, dy, posX, posY, e) {
-		if (busy)
-			return;
-
 		this.data('origTransform', this.transform().local );
 
 	}, function () {
-		if (busy)
-			return;
-
 		var current = this.p;
 
 		if (current.pointerOn) {
@@ -278,14 +273,57 @@ function node(value, x, y, next) {
  * Refresh nodes for any state updates
  */
 function refreshNodes() {
+	var occurredNext = [];
+	var occurredValue = [];
+
 	// refresh head and its pointer
 	head.refresh();
+	if (head.next)
+		occurredNext.push(head.next);
 
 	n.forEach(function(node) {
 		// refresh node and its pointer
 		node.refresh();
+
+		if (node.next)
+			occurredNext.push(node.next);
+
+		occurredValue.push(node.value);
 	});
 
 	// health check for loops
-	var occurred = [];
+	health.loops = findDuplicates(occurredNext);
+	health.duplicates = findDuplicates(occurredValue);
+	console.log(health.duplicates);
+
+	if (! isEmpty(health.loops)) {
+		if (notice.loops == false)
+			notice.loops = noty({
+				text: 'Invalid: Loop present between node pointers. You can have of course have loops in a list, but it leads funny consequences.',
+				type: 'error',
+				timeout: false,
+				closeWith: []
+			});
+	} else {
+		if (notice.loops) {
+			notice.loops.close();
+			notice.loops = false;
+		}
+	}
+
+	if (! isEmpty(health.duplicates)) {
+		if (notice.duplicates == false) {
+			notice.duplicates = noty({
+				text: 'Invalid: Duplicate values present. Only the first value will be accessible by functions.',
+				type: 'error',
+				timeout: false,
+				closeWith: []
+			});
+		}
+	} else {
+		if (notice.duplicates) {
+			notice.duplicates.close();
+			notice.duplicates = false;
+		}
+	}
 }
