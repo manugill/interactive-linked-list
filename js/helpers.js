@@ -22,20 +22,21 @@ var isEmpty = function (obj) {
 }
 
 /* SVG */
+var getNodeCollisions = function () {
 
-// Get group element by node
+
+}
 
 /* Geometry */
-
 // Closest point on rectangle point a given point
-function nearestRectPoint(point, rect) {
+var nearestRectPoint = function (point, rect) {
 	var loc = {};
 	loc.x = minXDistance(point, rect);
 	loc.y = minYDistance(point, rect);
 
 	return loc;
 }
-function minXDistance(point, rect) {
+var minXDistance = function (point, rect) {
 	if (rect.start.x > point.x)
 		return rect.start.x;
 	else if (rect.end.x < point.x)
@@ -43,7 +44,7 @@ function minXDistance(point, rect) {
 	else
 		return point.x;
 }
-function minYDistance(point, rect) {
+var minYDistance = function (point, rect) {
 	if (rect.start.y > point.y)
 		return rect.start.y;
 	else if (rect.end.y < point.y)
@@ -60,7 +61,7 @@ function isPointOnRect(point, rect) {
 		return false;
 }
 
-var findDuplicates = function(list){
+var findDuplicates = function (list){
 	var seen = [];
 	var result = [];
 

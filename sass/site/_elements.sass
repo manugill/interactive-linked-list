@@ -80,14 +80,13 @@ button, .button
 /**
  * Options
  */
-
 .options
-	padding: 20px
 	position: absolute
 	top: 0
 	left: 0
-	width: 200px
 	height: 100%
+	width: 180px
+	padding: 20px
 	background: #fff
 	border-right: 5px solid rgba($primary, 0.4)
 	z-index: 20
@@ -103,3 +102,31 @@ button, .button
 				&>*
 					border-top-left-radius: 0
 					border-bottom-left-radius: 0
+
+
+/**
+ * Code / prism.js
+ */
+pre[class*="language-"]
+	position: absolute
+	top: 0
+	right: 0
+	height: 100%
+	width: 520px
+	z-index: 10
+	display: block
+	margin: 0
+	padding: 15px 20px
+	background: rgba($dark, 0.6)
+	border-left: 5px solid rgba($dark, 0.2)
+
+	border-radius: 0
+
+	&, code[class*="language-"]
+		font-family: $family-mono
+
+	.line-highlight
+		background: rgba($light, 0.2)
+
+		&:before
+			display: none

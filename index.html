@@ -10,12 +10,14 @@
 	<link rel="stylesheet" href="css/ionicons.css">
 	<link rel="stylesheet" href="css/normalize.css">
 	<link rel="stylesheet" href="css/animate.css">
+	<link rel="stylesheet" href="css/prism.custom.css">
 	<link rel="stylesheet" href="css/app.css">
 
 	<!-- JS -->
 	<script src="js/vendor/jquery-2.1.4.min.js"></script>
 	<script src="js/vendor/underscore-min.js"></script>
 	<script src="js/vendor/jquery.noty.packaged.js"></script>
+	<script src="js/vendor/prism.custom.js"></script>
 	<script src="js/vendor/snap.svg.js"></script>
 
 </head>
@@ -59,10 +61,13 @@
 				</div>
 			</form>
 
+			<a href="#code.50-55,60">Linking example</a>
+
 		</div>
 
+		<!-- Editor -->
 		<svg class="editor">
-			<!-- Markers, Filters & Animations -->
+			<!-- Markers & Filters -->
 			<defs>
 				<marker id="triangle" viewBox="0 0 10 10" refX="10" refY="5" markerUnits="strokeWidth" markerWidth="10" markerHeight="10" orient="auto">
 					<path d="M 0 0 L 10 5 L 0 10 z">
@@ -95,9 +100,76 @@
 			<!-- Dynamic stuff happens around here -->
 		</svg>
 
+		<!-- Code -->
+		<pre id="code" data-line="5" data-src="http://prismjs.com/plugins/line-highlight/prism-line-highlight.js" class="language-python"><code>
+class Node(object):
+
+    def __init__(self, data=None, next_node=None):
+        self.data = data
+        self.next_node = next_node
+
+    def get_data(self):
+        return self.data
+
+    def get_next(self):
+        return self.next_node
+
+    def set_next(self, new_next):
+        self.next_node = new_next
+
+
+class LinkedList(object):
+
+    def __init__(self, head=None):
+        self.head = head
+
+    def insert(self, data):
+        new_node = Node(data)
+        new_node.set_next(self.head)
+        self.head = new_node
+
+    def size(self):
+        current = self.head
+        count = 0
+        while current:
+            count += 1
+            current = current.get_next()
+        return count
+
+    def search(self, data):
+        current = self.head
+        found = False
+        while current and found is False:
+            if current.get_data() == data:
+                found = True
+            else:
+                current = current.get_next()
+        if current is None:
+            raise ValueError("Data not in list")
+        return current
+
+    def delete(self, data):
+        current = self.head
+        previous = None
+        found = False
+        while current and found is False:
+            if current.get_data() == data:
+                found = True
+            else:
+                previous = current
+                current = current.get_next()
+        if current is None:
+            raise ValueError("Data not in list")
+        if previous is None:
+            self.head = current.get_next()
+        else:
+            previous.set_next(current.get_next())
+		</code></pre>
+
 	</div>
 
 	<script src="js/helpers.js"></script>
+	<script src="js/init.noty.js"></script>
 	<script src="js/base.js"></script>
 	<script src="js/node.js"></script>
 	<script src="js/app.js"></script>

@@ -260,7 +260,7 @@ function node(value, x, y, next) {
 	});
 
 
-	/* Done? Do some shindig */
+	/* Done? Do some shindig (call animations and draw initial line) */
 	this.setPointerClass('bounceInDown');
 	this.setInnerClass('bounceInUp');
 	this.updateLine();
@@ -272,7 +272,7 @@ function node(value, x, y, next) {
  * Global updates
  * Refresh nodes for any state updates
  */
-function refreshNodes() {
+var refreshNodes = function () {
 	var occurredNext = [];
 	var occurredValue = [];
 
@@ -297,13 +297,14 @@ function refreshNodes() {
 	console.log(health.duplicates);
 
 	if (! isEmpty(health.loops)) {
-		if (notice.loops == false)
+		if (notice.loops == false) {
 			notice.loops = noty({
-				text: 'Invalid: Loop present between node pointers. You can have of course have loops in a list, but it leads funny consequences.',
+				text: 'Invalid: Loop present between node pointers. It leads to funny consequences.',
 				type: 'error',
 				timeout: false,
 				closeWith: []
 			});
+		}
 	} else {
 		if (notice.loops) {
 			notice.loops.close();
@@ -314,7 +315,7 @@ function refreshNodes() {
 	if (! isEmpty(health.duplicates)) {
 		if (notice.duplicates == false) {
 			notice.duplicates = noty({
-				text: 'Invalid: Duplicate values present. Only the first value will be accessible by functions.',
+				text: 'Invalid: Duplicate values present. Only the first value will be accessible by functions. Try removing the value to fix the issue.',
 				type: 'error',
 				timeout: false,
 				closeWith: []
