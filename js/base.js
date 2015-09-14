@@ -42,6 +42,12 @@ def.attrPointer = {
 	class: 'pointer animated'
 };
 
+
+/* Code elements */
+var code = $('#code');
+var codeEl = $('#code code')[0];
+
+
 /* Snap svg setup */
 var svg = $('.editor')[0];
 var s = Snap(svg);

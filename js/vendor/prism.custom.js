@@ -185,6 +185,7 @@ var _ = _self.Prism = {
 
 		if (!code || !grammar) {
 			_.hooks.run('complete', env);
+			console.log('test');
 			return;
 		}
 
@@ -761,9 +762,9 @@ Prism.hooks.add('complete', function(env) {
 	$$('.line-highlight', pre).forEach(function (line) {
 		line.parentNode.removeChild(line);
 	});
-	
+
 	highlightLines(pre, lines);
-	
+
 	fakeTimer = setTimeout(applyHash, 1);
 });
 

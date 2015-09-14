@@ -2,189 +2,188 @@
  * Setup UI and user usable functions
  */
 
-$(document).ready(function () {
-	// Prism.js
-	$('pre').attr('data-line', '5');
+// Setup initial linked list
+var head = new node('', 250, 80);
+head.group.attr({
+	id: 'head'
+});
 
-	setTimeout(function() {
-		href = '#code.20';
+n[0] = new node(40, 310, 200);
+head.connect(n[0]);
+head.updateLine();
 
-			location.hash = href;
-	}, 1000);
+n[1] = new node(16, 490, 200);
+n[0].connect(n[1]);
+n[0].updateLine();
 
-	// Setup initial linked list
-	var head = new node('', 250, 80);
-	head.group.attr({
-		id: 'head'
-	});
+n[2] = new node(55, 490, 320);
+n[1].connect(n[2]);
+n[1].updateLine();
 
-	n[0] = new node(40, 310, 200);
-	head.connect(n[0]);
-	head.updateLine();
-
-	n[1] = new node(16, 490, 200);
-	n[0].connect(n[1]);
-	n[0].updateLine();
-
-	n[2] = new node(55, 490, 320);
-	n[1].connect(n[2]);
-	n[1].updateLine();
-
-	n[3] = new node(72, 660, 320);
-	n[2].connect(n[3]);
-	n[2].updateLine();
+n[3] = new node(72, 660, 320);
+n[2].connect(n[3]);
+n[2].updateLine();
 
 
-	/* Insert event */
-	$('#insert').submit(function (e) {
-		e.preventDefault();
+/* Insert event */
+$('#insert').submit(function (e) {
+	e.preventDefault();
 
-		var text = $('#insert-text');
-		var val = parseInt(text.val());
-		var x = e.clientX - def.nodeWidth/2;
-		var y = e.clientY - def.nodeHeight/2;
-		var index = n.length; // we're cool like that
+	if (busy)
+		return false;
+	busy = true;
 
-		text.val(Math.floor((Math.random() * 99) + 1));
+	var text = $('#insert-text');
+	var val = parseInt(text.val());
+	var x = e.clientX - def.nodeWidth/2;
+	var y = e.clientY - def.nodeHeight/2;
+	var index = n.length; // we're cool like that
 
-		n[index] = new node(val, 400, 50);
+	text.val(Math.floor((Math.random() * 99) + 1));
 
-		noty({
-			text: 'Create a new node.'
-		});
+	n[index] = new node(val, 400, 50);
 
-		setTimeout(function () {
-			refreshNodes();
+	notification("Added a new node.");
+	highlightCode('11,12');
 
-			n[index].connect(head.next);
-			n[index].updateLine(500);
-
-			noty({
-				text: 'Set node\'s pointer to head\'s next.'
-			});
-
-			setTimeout(function () {
-				head.connect(n[index]);
-				head.updateLine(500);
-
-				noty({
-					text: 'Set head\'s pointer to the new node.'
-				});
-
-				setTimeout(function () {
-					noty({
-						text: 'Node successfully inserted.',
-						type: 'success'
-					});
-				}, 1000);
-			}, 1500);
-		}, 1500);
-	});
-
-
-	/* Search event */
-	$('#search').submit(function (e) {
-		e.preventDefault();
-
-		var value = parseInt($('#search-text').val());
-		searchNode(value);
-	});
-
-
-	/* Remove event */
-	$('#remove').submit(function (e) {
-		e.preventDefault();
-
-		var value = parseInt($('#remove-text').val());
-		searchNode(value, deleteNode);
-	});
-
-
-	/* Search function */
-	var searchNode = function (searchVal, action) {
-		if (busy)
-			return false;
-		busy = true;
-
-		// Point to head and highlight
-		var current = head;
-		var nodePrev = false;
-		current.highlight = true;
+	setTimeout(function () {
 		refreshNodes();
 
-		var searching = setInterval(function () {
-			current.highlight = false;
+		n[index].connect(head.next);
+		n[index].updateLine(500);
 
-			if ( current.next ) {
-				nodePrev = current;
-				current = current.next;
-				current.highlight = true;
+		notification("Set node's pointer to head.");
+		highlightCode('11,13');
 
-				refreshNodes();
+		setTimeout(function () {
+			head.connect(n[index]);
+			head.updateLine(500);
 
+			notification("Set head pointer to the new node.");
+			highlightCode('11,14');
+
+			setTimeout(function () {
+				notification("Node successfully added.", 'success');
+				highlightCode('11');
+
+				busy = false;
+			}, 1000);
+		}, 1500);
+	}, 1500);
+});
+
+
+/* Search event */
+$('#search').submit(function (e) {
+	e.preventDefault();
+
+	var value = parseInt($('#search-text').val());
+	searchNode(value);
+});
+
+
+/* Remove event */
+$('#remove').submit(function (e) {
+	e.preventDefault();
+
+	var value = parseInt($('#remove-text').val());
+
+	notification("Executing delete...");
+	highlightCode('36-37');
+	setTimeout(function () {
+		searchNode(value, deleteNode, ',36-37');
+	}, 500);
+
+});
+
+
+/* Search function */
+var searchNode = function (searchVal, action, codeRange) {
+	if (busy)
+		return false;
+	busy = true;
+
+	if (codeRange === undefined)
+		codeRange = '';
+
+	// Point to head and highlight
+	var current = head;
+	var nodePrev = false;
+	current.highlight = true;
+	refreshNodes();
+
+	notification("Starting search from head...");
+	highlightCode('16-19' + codeRange);
+
+	var searching = setInterval(function () {
+		current.highlight = false;
+
+		if ( current.next ) {
+			nodePrev = current;
+			current = current.next;
+			current.highlight = true;
+
+			refreshNodes();
+
+			highlightCode('16,21' + codeRange);
+
+			setTimeout(function () {
 				// Found the value
 				if ( current.value == searchVal ) {
 					current.highlight = false;
 
+					highlightCode('16,21-23' + codeRange);
+
 					setTimeout(function () {
 						current.setInnerClass('tada');
 
-						noty({
-							text: 'Node found!',
-							type: 'success'
-						});
+						notification("Node found!", 'success');
+						highlightCode('16,31-34' + codeRange);
 
 						if ( action )
 							action(current, nodePrev);
 						else
 							busy = false;
-					}, 900);
+					}, 1500);
 
 					clearInterval(searching);
+				} else {
+					highlightCode('16,21,24-26' + codeRange);
 				}
 
-			} else {
-				noty({
-					text: 'Node not found, linked list exhausted.',
-					type: 'error'
-				});
+			}, 200);
 
-				refreshNodes();
+		} else {
+			notification("Data not found, linked list exhausted.", 'error');
+			highlightCode('16,28-30');
 
-				current.setInnerClass('wobble');
+			refreshNodes();
 
-				busy = false;
-				clearInterval(searching);
-			}
+			current.setInnerClass('wobble');
 
-		}, 1000);
-	};
+			busy = false;
+			clearInterval(searching);
+		}
 
-	/* Delete function */
-	var deleteNode = function (node, nodePrev) {
+	}, 1500);
+};
+
+/* Delete function */
+var deleteNode = function (node, nodePrev) {
+	setTimeout(function () {
+		nodePrev.connect(node.next);
+		nodePrev.updateLine(500);
+
+		notification("Set previous pointer to current's next.");
+		highlightCode('36,39-40');
+
 		setTimeout(function () {
-			noty({
-				text: 'Updated pointer of previous node.'
-			});
+			notification("Delete successful! The node can't be accessed anymore by functions and will be garbage collected.", 'success');
 
-			nodePrev.connect(node.next);
-			nodePrev.updateLine(500);
+			n = _.reject(n, function (el) { return el === node; });
+			node.delete();
 
-			setTimeout(function () {
-				noty({
-					text: 'Garbage collected.'
-				});
-
-				n = _.reject(n, function (el) { return el === node; });
-				node.delete();
-
-				busy = false;
-
-				setTimeout(function () {
-					refreshNodes();
-				}, 1000);
-			}, 1500);
+			busy = false;
 		}, 1500);
-	};
-
-});
+	}, 1500);
+};

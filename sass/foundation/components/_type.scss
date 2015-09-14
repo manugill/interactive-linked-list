@@ -301,6 +301,7 @@ $align-class-breakpoints:
       line-height: inherit;
     }
 
+    /* Disabled: interferes with Prism.js
     code {
       background-color: $code-background-color;
       border-color: $code-border-color;
@@ -311,6 +312,7 @@ $align-class-breakpoints:
       font-weight: $code-font-weight;
       padding: $code-padding;
     }
+    */
 
     /* Lists */
     ul,

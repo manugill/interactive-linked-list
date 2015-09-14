@@ -294,7 +294,6 @@ var refreshNodes = function () {
 	// health check for loops
 	health.loops = findDuplicates(occurredNext);
 	health.duplicates = findDuplicates(occurredValue);
-	console.log(health.duplicates);
 
 	if (! isEmpty(health.loops)) {
 		if (notice.loops == false) {
