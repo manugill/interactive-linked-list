@@ -1,32 +1,36 @@
 /**
  * Setup UI and user usable functions
  */
+busy = true;
 
 // Create head
-var head = new node('', 40, 80);
+var head = new node('', 40 + bound.left, 80);
 head.group.attr({
 	id: 'head'
 });
 
 setTimeout(function () {
-		n[0] = new node(40, 100, 230);
-		head.connect(n[0]);
-		head.updateLine();
+	n[0] = new node(40, 100 + bound.left, 230);
+	head.connect(n[0]);
+	head.updateLine();
 }, 200);
+
 setTimeout(function () {
-	n[1] = new node(16, 280, 230);
+	n[1] = new node(16, 280 + bound.left, 230);
 	n[0].connect(n[1]);
 	n[0].updateLine();
 }, 400);
 setTimeout(function () {
-	n[2] = new node(55, 140, 380);
+	n[2] = new node(55, 140 + bound.left, 380);
 	n[1].connect(n[2]);
 	n[1].updateLine();
 }, 600);
 setTimeout(function () {
-	n[3] = new node(72, 320, 380);
+	n[3] = new node(72, 320 + bound.left, 380);
 	n[2].connect(n[3]);
 	n[2].updateLine();
+
+	busy = false; // Enable controls
 }, 800);
 
 
@@ -44,36 +48,48 @@ $('#insert').submit(function (e) {
 	var y = e.clientY - def.nodeHeight/2;
 	var index = n.length; // we're cool like that
 
-	text.val(Math.floor((Math.random() * 99) + 1));
+	var loc = nextNodeLoc();
+	if (loc) { // An empty location found
+		text.val(Math.floor((Math.random() * 99) + 1));
+		
+		n[index] = new node(val, loc.x, loc.y);
 
-	n[index] = new node(val, 200, 80);
-
-	notification("Added a new node.");
-	highlightCode('11,12');
-
-	setTimeout(function () {
-		refreshNodes();
-
-		n[index].connect(head.next);
-		n[index].updateLine(500);
-
-		notification("Set node's pointer to head.");
-		highlightCode('11,13');
+		notification("Added a new node.");
+		highlightCode('11,12');
 
 		setTimeout(function () {
-			head.connect(n[index]);
-			head.updateLine(500);
+			refreshNodes();
 
-			notification("Set head pointer to the new node.");
-			highlightCode('11,14');
+			n[index].connect(head.next);
+			n[index].updateLine(500);
+
+			notification("Set node's pointer to head.");
+			highlightCode('11,13');
 
 			setTimeout(function () {
-				notification("Node successfully added.", 'success');
+				head.connect(n[index]);
+				head.updateLine(500);
 
-				busy = false;
-			}, 1000);
-		}, 1500);
-	}, 1500);
+				notification("Set head pointer to the new node.");
+				highlightCode('11,14');
+
+				setTimeout(function () {
+					notification("Node successfully added.", 'success');
+
+					busy = false;
+				}, timeout.mid);
+			}, timeout.long);
+		}, timeout.long);
+	} else {
+		// No location found.
+		$.noty.clearQueue();
+		$.noty.closeAll();
+		noty({
+			text: "No more area on screen left to add nodes. Please move nodes around or remove some to make space.",
+			type: 'warning'
+		});
+		busy = false;
+	}
 });
 
 
@@ -97,7 +113,7 @@ $('#remove').submit(function (e) {
 
 	setTimeout(function () {
 		searchNode(value, deleteNode, ',36-37');
-	}, 500);
+	}, timeout.long);
 
 });
 
@@ -149,18 +165,18 @@ var searchNode = function (searchVal, action, codeRange) {
 							action(current, nodePrev);
 						else
 							busy = false;
-					}, 1500);
+					}, timeout.long);
 
 					clearInterval(searching);
 				} else {
 					highlightCode('16,21,24-26' + codeRange);
 				}
 
-			}, 200);
+			}, timeout.short);
 
 		} else {
 			notification("Data not found, linked list exhausted.", 'error');
-			highlightCode('16,28-30');
+			highlightCode('16,28-29');
 
 			refreshNodes();
 
@@ -170,7 +186,7 @@ var searchNode = function (searchVal, action, codeRange) {
 			clearInterval(searching);
 		}
 
-	}, 1500);
+	}, timeout.long);
 };
 
 /* Delete function */
@@ -189,6 +205,6 @@ var deleteNode = function (node, nodePrev) {
 			node.delete();
 
 			busy = false;
-		}, 1500);
-	}, 1500);
+		}, timeout.long);
+	}, timeout.long);
 };

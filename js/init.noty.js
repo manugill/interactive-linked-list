@@ -64,10 +64,10 @@ $.noty.defaults = {
 		easing: 'linear',
 		speed: 500 // opening & closing animation speed
 	},
-	timeout: 4000, // delay for closing event. Set false for sticky notifications
+	timeout: timeout.notification, // delay for closing event. Set false for sticky notifications
 	force: false, // adds notification to the beginning of queue when set to true
 	modal: false,
-	maxVisible: 5, // you can set max visible notification for dismissQueue true option,
+	maxVisible: 6, // you can set max visible notification for dismissQueue true option,
 	killer: false, // for close all notifications before show
 	closeWith: ['click'], // ['click', 'button', 'hover', 'backdrop'] // backdrop click will close all notifications
 	callback: {

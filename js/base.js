@@ -4,12 +4,30 @@ var nMax = 0;
 var head = undefined;
 var busy = false; // used to block operations
 
+// Healths and notices
 var health = {};
 health.loops = [];
 health.duplicate = [];
 var notice = {};
 notice.loops = false;
 notice.duplicates = false;
+
+// Speed timeouts
+var timeout = {};
+// Normal speed
+timeout.long = 1500;
+timeout.medium = 1000;
+timeout.short = 500;
+timeout.notification = 4000;
+timeout.disableNotifications = false;
+
+/*// Fast speed
+timeout.long = 25;
+timeout.medium = 10;
+timeout.short = 10;
+timeout.notification = 4000;
+timeout.disableNotifications = true;
+*/
 
 // Defaults
 var def = {};
@@ -52,10 +70,10 @@ var $editor = $('.editor');
 var editorEl = $editor[0];
 var s = Snap(editorEl);
 
-// Screen size, boudns & offset
+// Editor bounds, screen size and offsets
 bound = {};
 bound.top = 0;
-bound.left = 180;
+bound.left = 168;
 bound.bottom = 0;
 bound.right = 0;
 
@@ -66,8 +84,10 @@ var calculateSizes = function () {
 	offset = {};
 	offset.top = $editor.offset().top;
 	offset.left = $editor.offset().left;
-	offset.bottom = screenHeight - offset.top + $editor.outerHeight();
-	offset.right = screenWidth - offset.left + $editor.outerWidth();
+	offset.bottom = screenHeight - (offset.top + $editor.outerHeight());
+	offset.right = screenWidth - (offset.left + $editor.outerWidth());
+	offset.limitRight = screenWidth - (offset.right + offset.left);
+	offset.limitBottom = screenHeight - offset.bottom;
 }
 calculateSizes();
 

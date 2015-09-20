@@ -16,12 +16,8 @@ function node(value, x, y) {
 
 	// Initial location
 	var matrix = new Snap.Matrix();
-	if (x !== undefined && y !== undefined) {
-		matrix.translate(x + bound.left, y + bound.top);
-	} else {
-		var loc = nextNodeLoc();
-		matrix.translate(x + loc.x, y + loc.y);
-	}
+	matrix.translate(x, y);
+
 	// Setup group
 	this.group = s.group(def.attrNode);
 	this.group.p = this; // link group element to object, for drag events
@@ -309,7 +305,7 @@ var refreshNodes = function () {
 	if (! isEmpty(health.loops)) {
 		if (notice.loops == false) {
 			notice.loops = noty({
-				text: 'Invalid list: Possible loop, more than 1 pointers to a node. It leads to funny consequences.',
+				text: 'Invalid: Possible loop, more than 1 pointers to a single node. It can lead to infinite loops.',
 				type: 'error',
 				timeout: false,
 				closeWith: []
@@ -325,7 +321,7 @@ var refreshNodes = function () {
 	if (! isEmpty(health.duplicates)) {
 		if (notice.duplicates == false) {
 			notice.duplicates = noty({
-				text: 'Invalid list: Duplicate values present. Only the first value will be accessible by functions. Try removing the value to fix the issue.',
+				text: 'Invalid: Duplicate values present. Only the first value will be accessible by functions. Try removing the value to fix the issue.',
 				type: 'error',
 				timeout: false,
 				closeWith: []
