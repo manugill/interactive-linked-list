@@ -2,21 +2,52 @@
  * Contains base styling, typography, general elements and utility styling
  */
 
-/* Typography */
+/* Typography & Base */
 body
 	overflow-x: hidden
-	min-width: u(600)
+	min-width: 600px
 	font-family: $family
 	color: $dark
+	background: #111
+	font-weight: 300
+
+	max-width: 1600px
+	margin: 0 auto
+
+.wrapper
+	position: relative
+	overflow: hidden
 	background: $primary
 
 h1, h2, h3, h4, h5, h6
+	text-transform: uppercase
 	font-family: inherit
 	font-weight: 300
 	color: inherit
 	line-height: 1.4
-	margin-top: u(34)
-	margin-bottom: u(20)
+	margin-top: 10px
+	margin-bottom: 5px
+
+h1
+	font-size: 32px
+
+h2
+	font-size: 28px
+
+h3
+	font-size: 24px
+
+h4
+	font-size: 20px
+
+h5
+	font-size: 18px
+	color: #555
+
+h6
+	font-weight: 700
+	font-size: 16px
+
 
 a
 	color: $primary
@@ -33,7 +64,7 @@ iframe
 	border: 0
 
 hr
-	margin: 30px 0
+	margin: 30px -20px
 	height: 0
 	border: 0 solid #eee
 	border-top-width: 1px

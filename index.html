@@ -4,14 +4,14 @@
 	<title>FIT1008 - Linked List Mockup</title>
 
 	<!-- Fonts -->
-	<!--link href='https://fonts.googleapis.com/css?family=Roboto:400,500,700,300' rel='stylesheet' type='text/css'-->
+	<link href='https://fonts.googleapis.com/css?family=Roboto:400,900,500,700,100,300|Roboto+Mono:400,100,300,500,700' rel='stylesheet' type='text/css'>
 
 	<!-- CSS -->
 	<link rel="stylesheet" href="css/ionicons.css">
 	<link rel="stylesheet" href="css/normalize.css">
 	<link rel="stylesheet" href="css/animate.css">
 	<link rel="stylesheet" href="css/prism.custom.css">
-	<link rel="stylesheet" href="css/app.css">
+	<link rel="stylesheet" href="app.css">
 
 	<!-- JS -->
 	<script src="js/vendor/jquery-2.1.4.min.js"></script>
@@ -26,11 +26,15 @@
 
 	<div class="wrapper">
 
-		<div class="options">
-			<h4>Insert</h4>
+		<!-- Fullscreen alert -->
+		<div class="fullscreen-alert animated fadeInUp">Please switch to fullscreen or open the module on a larger screen to for a better experience.</div>
+
+		<!-- Options -->
+		<div class="options animated fadeInLeft">
+			<h5>Insert</h5>
 			<form id="insert" class="row collapse">
 				<div class="small-6 columns">
-					<input type="text" id="insert-text" value="30">
+					<input type="number" id="insert-text" value="30" required maxlength="2">
 				</div>
 				<div class="small-6 columns">
 					<button type="submit" class="success hollow"><i class="ion-ios-plus"></i></button>
@@ -39,67 +43,73 @@
 
 			<hr>
 
-			<h4>Search</h4>
+			<h5>Search</h5>
 			<form id="search" class="row collapse">
 				<div class="small-6 columns">
-					<input type="text" id="search-text" value="16">
+					<input type="number" id="search-text" value="16" required maxlength="2">
 				</div>
 				<div class="small-6 columns">
-					<button type="submit" class="hollow"><i class="ion-ios-search-strong"></i></button>
+					<button type="submit" class="success hollow"><i class="ion-ios-search-strong"></i></button>
 				</div>
 			</form>
 
 			<hr>
 
-			<h4>Remove</h4>
+			<h5>Remove</h5>
 			<form id="remove" class="row collapse">
 				<div class="small-6 columns">
-					<input type="text" id="remove-text" value="40">
+					<input type="number" id="remove-text" value="40" required maxlength="2">
 				</div>
 				<div class="small-6 columns">
-					<button type="submit" class="warning hollow"><i class="ion-ios-close"></i></button>
+					<button type="submit" class="success hollow"><i class="ion-ios-close"></i></button>
 				</div>
 			</form>
+
+			<hr>
+
+			<h4>Goals (0/4)</h4>
+			<div class="progress">
+				<span class="meter success" style="width: 100%"></span>
+			</div>
 
 		</div>
 
 		<!-- Editor -->
-		<svg class="editor">
+		<svg class="editor" version="1.1" xmlns="http://www.w3.org/2000/svg">
 			<!-- Markers & Filters -->
 			<defs>
-				<marker id="triangle" viewBox="0 0 10 10" refX="10" refY="5" markerUnits="strokeWidth" markerWidth="10" markerHeight="10" orient="auto">
-					<path d="M 0 0 L 10 5 L 0 10 z">
+				<marker id="triangle" viewBox="0 0 10 10" refX="10" refY="5" markerUnits="strokeWidth" fill="#fff" markerWidth="10" markerHeight="10" orient="auto">
+					<path d="M 0 0 L 10 5 L 0 10 z" />
 				</marker>
 
 				<filter id="dragging" x="-50%" y="-50%" width="200%" height="200%">
-					<feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
-					<feOffset dx="0" dy="6" result="offsetblur"/>
-					<feFlood flood-color="rgba(0,0,0,0.2)"/>
-					<feComposite in2="offsetblur" operator="in"/>
+					<feGaussianBlur in="SourceAlpha" stdDeviation="2" />
+					<feOffset dx="0" dy="6" result="offsetblur" />
+					<feFlood flood-color="rgba(0,0,0,0.2)" />
+					<feComposite in2="offsetblur" operator="in" />
 					<feMerge>
-						<feMergeNode/>
-						<feMergeNode in="SourceGraphic"/>
+						<feMergeNode />
+						<feMergeNode in="SourceGraphic" />
 					</feMerge>
 				</filter>
 
 				<filter id="highlight" x="-50%" y="-50%" width="200%" height="200%">
-					<feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
-					<feOffset dx="0" dy="0" result="offsetblur"/>
-					<feFlood flood-color="#fff"/>
-					<feComposite in2="offsetblur" operator="in"/>
+					<feGaussianBlur in="SourceAlpha" stdDeviation="3" />
+					<feOffset dx="0" dy="0" result="offsetblur" />
+					<feFlood flood-color="#fff" />
+					<feComposite in2="offsetblur" operator="in" />
 					<feMerge>
-						<feMergeNode/>
-						<feMergeNode in="SourceGraphic"/>
+						<feMergeNode />
+						<feMergeNode in="SourceGraphic" />
 					</feMerge>
 				</filter>
-
 			</defs>
 
 			<!-- Dynamic stuff happens around here -->
 		</svg>
 
 		<!-- Code -->
-		<pre id="code" class="language-python"><code>class Node(object):
+		<pre id="code" class="language-python animated fadeInRight"><code>class Node(object):
     def __init__(self, data=None, next=None):
         self.data = data
         self.next = next
@@ -149,7 +159,7 @@ class LinkedList(object):
             current = current.get_next()
 
         return count
-		</code></pre>
+</code></pre>
 
 	</div>
 

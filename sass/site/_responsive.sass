@@ -1,0 +1,37 @@
+/**
+ * Responsive queries
+ */
+
+.fullscreen-alert
+	display: none
+	position: fixed
+	bottom: 0
+	left: 0
+	width: 100%
+	box-shadow: 0 0 0 3px rgba($dark, 0.2)
+	background: #f04124
+	z-index: 100
+	color: #fff
+	padding: 15px 15px
+	font-size: 16px
+	font-weight: 300
+	line-height: 1.5
+
+	a
+		color: #fff
+		font-weight: 400
+		text-shadow: 0 0 10px rgba($light, 0.2)
+		padding: 5px 7px
+		background: rgba($light, 0.2)
+		border-radius: 5px
+
+@media screen and (max-width: 1600px)
+	.wrapper
+		box-shadow: 0 0 100px rgba($light, 0.2)
+
+@media screen and (max-width: 900px)
+	pre#code
+		display: none
+
+	.fullscreen-alert
+		display: block

@@ -2,27 +2,32 @@
  * Setup UI and user usable functions
  */
 
-// Setup initial linked list
-var head = new node('', 250, 80);
+// Create head
+var head = new node('', 40, 80);
 head.group.attr({
 	id: 'head'
 });
 
-n[0] = new node(40, 310, 200);
-head.connect(n[0]);
-head.updateLine();
-
-n[1] = new node(16, 490, 200);
-n[0].connect(n[1]);
-n[0].updateLine();
-
-n[2] = new node(55, 490, 320);
-n[1].connect(n[2]);
-n[1].updateLine();
-
-n[3] = new node(72, 660, 320);
-n[2].connect(n[3]);
-n[2].updateLine();
+setTimeout(function () {
+		n[0] = new node(40, 100, 230);
+		head.connect(n[0]);
+		head.updateLine();
+}, 200);
+setTimeout(function () {
+	n[1] = new node(16, 280, 230);
+	n[0].connect(n[1]);
+	n[0].updateLine();
+}, 400);
+setTimeout(function () {
+	n[2] = new node(55, 140, 380);
+	n[1].connect(n[2]);
+	n[1].updateLine();
+}, 600);
+setTimeout(function () {
+	n[3] = new node(72, 320, 380);
+	n[2].connect(n[3]);
+	n[2].updateLine();
+}, 800);
 
 
 /* Insert event */
@@ -41,7 +46,7 @@ $('#insert').submit(function (e) {
 
 	text.val(Math.floor((Math.random() * 99) + 1));
 
-	n[index] = new node(val, 400, 50);
+	n[index] = new node(val, 200, 80);
 
 	notification("Added a new node.");
 	highlightCode('11,12');
@@ -64,7 +69,6 @@ $('#insert').submit(function (e) {
 
 			setTimeout(function () {
 				notification("Node successfully added.", 'success');
-				highlightCode('11');
 
 				busy = false;
 			}, 1000);
@@ -90,6 +94,7 @@ $('#remove').submit(function (e) {
 
 	notification("Executing delete...");
 	highlightCode('36-37');
+
 	setTimeout(function () {
 		searchNode(value, deleteNode, ',36-37');
 	}, 500);

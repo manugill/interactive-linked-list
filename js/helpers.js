@@ -20,9 +20,6 @@ var isEmpty = function (obj) {
 	return true;
 }
 
-/* SVG */
-var getNodeCollisions = function () {
-};
 
 /* Geometry */
 // Closest point on rectangle point a given point
@@ -58,6 +55,38 @@ function isPointOnRect(point, rect) {
 		return false;
 };
 
+// Generate a loc object with start end of a node.
+var nodeLoc = function (matrix) {
+	loc = {};
+	loc.x = matrix.e;
+	loc.y = matrix.f;
+
+	loc.end = {}; // the bottom right point
+	loc.end.x = loc.x + def.nodeWidth/2 + def.nodeSpace;
+	loc.end.y = loc.y + def.nodeHeight/2;
+
+	loc.start = {}; // the top left point
+	loc.start.x = loc.x - def.nodeWidth/2 - def.nodeSpace;
+	loc.start.y = loc.y - def.nodeHeight/2;
+
+	return loc;
+}
+
+var nextNodeLoc = function () {
+	var nodeLoc;
+}
+
+
+var nodeMatrixInBounds = function (matrix) {
+	var loc = nodeLoc(matrix);
+
+	if (loc.start.x < bound.left || loc.start.y < bound.top ||
+		loc.end.x > screenWidth - bound.right || loc.end.y > screenHeight - bound.bottom)
+		return false;
+
+	return true;
+}
+
 var findDuplicates = function (list) {
 	var seen = [];
 	var result = [];
@@ -72,6 +101,7 @@ var findDuplicates = function (list) {
 
 	return result;
 };
+
 
 
 /* Code highlighting & notifications */
@@ -89,7 +119,12 @@ var highlightCode = function (range) {
 	code.attr('data-line', range);
 	Prism.highlightElement(codeEl);
 
+	var lineHighlight = $('.line-highlight:first');
+	var offset = lineHighlight.offset().top + $('pre').scrollTop();
+
+	console.log(offset);
+
 	$('pre').animate({
-		scrollTop: $('.line-highlight:first').offset().top
+		scrollTop: offset
 	});
 };

@@ -4,7 +4,7 @@
 .editor
 	shape-rendering: crispEdges
 	position: relative
-	z-index: 2
+	z-index: 10
 	display: block
 	width: 100%
 	height: 100%
@@ -21,7 +21,7 @@
 				stroke-width: 2px
 
 				&:nth-of-type(2)
-					fill: rgba(#fff, 0)
+					fill: rgba($primary, 1)
 
 			circle
 				shape-rendering: geometricPrecision
@@ -30,11 +30,9 @@
 				stroke-width: 1px
 
 			text
-				alignment-baseline: central
 				text-anchor: middle
 				font-family: $family-mono
-				font-size: 25px
-				letter-spacing: -1px
+				font-size: 24px
 				fill: $primary
 
 			.inner
@@ -47,20 +45,22 @@
 
 			// Active states
 			&.dragging
-				filter: url('#dragging')
+				filter: url('index.html#dragging')
+				shape-rendering: geometricPrecision
 
 				.inner
 					transform: scale(1.05)
 
 				rect
 					&:nth-of-type(2)
-						fill: rgba($light, 0.2)
+						fill: lighten($primary, 10)
 
 				circle
 					fill: $light
 
 			&.highlight
-				filter: url('#highlight')
+				filter: url('index.html#highlight')
+				shape-rendering: geometricPrecision
 
 				rect
 					fill: rgba($light, 0.3)
@@ -76,6 +76,8 @@
 					fill: $light
 
 			&.highlight-self
+				shape-rendering: geometricPrecision
+
 				rect
 					&:nth-of-type(2)
 						fill: rgba($light, 0.3)
@@ -92,7 +94,7 @@
 
 		&.pointer
 			stroke-width: 1px
-			marker-end: url('#triangle')
+			marker-end: url('index.html#triangle')
 
 	polyline
 		fill: none

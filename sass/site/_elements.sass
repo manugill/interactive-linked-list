@@ -3,25 +3,36 @@
  */
 
 input:not([type]), input[type=text], input[type=password], input[type=date], input[type=datetime], input[type=datetime-local], input[type=month], input[type=week], input[type=email], input[type=number], input[type=search], input[type=tel], input[type=time], input[type=url], input[type=color], select
-	padding:0 10px
 	text-align: center
-	font-size: 20px
-	line-height: 60px
+	font-family: $family-mono
+	font-size: 26px
+	line-height: 40px
+	padding:0 10px
+	border: 2px solid #eee
+	letter-spacing: -1px
 	height: 60px
 	text-shadow: none
 	margin-bottom: 0
 	border-radius: $radius
+	box-shadow: none
+
+input[type=number]
+	-moz-appearance: textfield
+input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button
+	appearance: none
+	margin: 0
 
 button, .button
 	width: 100%
 	padding: 0 10px
-	border-width: 1px
+	border-width: 2px
 	line-height: 58px
 	height: 60px
 	font-size: 30px
 	margin-bottom: 0
 	border-radius: $radius
 	transition: $transition
+	outline: none
 
 	&.hollow
 		background: none !important
@@ -67,8 +78,10 @@ button, .button
  */
 .alert-box
 	border-width: 0
-	padding: 10px 20px
-	font-weight: 700
+	padding: 12px 20px
+	font-weight: 400
+	font-size: 16px
+	line-height: 1.4
 
 .alert-list
 
@@ -85,10 +98,10 @@ button, .button
 	top: 0
 	left: 0
 	height: 100%
-	width: 180px
+	width: 165px
 	padding: 20px
+	box-shadow: 0 0 0 3px rgba($dark, 0.1)
 	background: #fff
-	border-right: 5px solid rgba($primary, 0.4)
 	z-index: 20
 
 	form.row.collapse
@@ -107,18 +120,21 @@ button, .button
 /**
  * Code / prism.js
  */
-pre[class*="language-"]
+pre#code
 	position: absolute
 	top: 0
 	right: 0
 	height: 100%
-	width: 520px
-	z-index: 10
+	width: 420px
+	overflow: hidden
+	z-index: 5
 	display: block
 	margin: 0
-	padding: 15px 20px
-	background: rgba($dark, 0.6)
-	border-left: 5px solid rgba($dark, 0.2)
+	padding: 15px 15px
+	background: rgba($dark, 0.5)
+	box-shadow: 0 0 0 3px rgba($dark, 0.7)
+	font-size: 14px
+	font-weight: 400
 
 	border-radius: 0
 

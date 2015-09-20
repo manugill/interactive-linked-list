@@ -2,11 +2,11 @@
  * Node object
  * The primary group element's position is the center, all other elements are aligned around
  */
-function node(value, x, y, next) {
+function node(value, x, y) {
 	nMax++;
 	this.id = nMax;
 	this.value = value;
-	this.next = next;
+	this.next = undefined;
 	this.disabled = false;
 	this.dragging = false;
 	this.highlight = false;
@@ -14,11 +14,19 @@ function node(value, x, y, next) {
 	this.pointerAt = false;
 	this.pointerOn = false;
 
+	// Initial location
+	var matrix = new Snap.Matrix();
+	if (x !== undefined && y !== undefined) {
+		matrix.translate(x + bound.left, y + bound.top);
+	} else {
+		var loc = nextNodeLoc();
+		matrix.translate(x + loc.x, y + loc.y);
+	}
 	// Setup group
 	this.group = s.group(def.attrNode);
 	this.group.p = this; // link group element to object, for drag events
 	this.group.attr({
-		transform: 't' + x + ',' + y,
+		transform: matrix,
 		class: 'node',
 		id: 'n' + nMax
 	});
@@ -40,7 +48,7 @@ function node(value, x, y, next) {
 	this.r2.attr(def.attrRect);
 	this.r2.appendTo(this.inner);
 
-	this.t = s.text(-(def.nodeWidth/4), 0, this.value)
+	this.t = s.text(-(def.nodeWidth/4 + def.nodeSpace), 9, this.value)
 	this.t.attr(def.attrText);
 	this.t.appendTo(this.inner);
 
@@ -74,7 +82,8 @@ function node(value, x, y, next) {
 	};
 
 	this.setInnerClass = function (classes) {
-		var element = this.get().getElementsByClassName('inner')[0];
+		var element = this.get().querySelectorAll('.inner')[0];
+
 		element.setAttribute('class', def.attrNodeInner.class + ' ' + classes);
 	};
 
@@ -122,19 +131,7 @@ function node(value, x, y, next) {
 
 	// Get location
 	this.loc = function () {
-		var loc = {}; // x and y are the top left point
-		loc.x = this.group.matrix.e;
-		loc.y = this.group.matrix.f;
-
-		loc.end = {}; // end.x and end.y are the bottom right point
-		loc.end.x = loc.x + def.nodeWidth/2 + def.nodeSpace;
-		loc.end.y = loc.y + def.nodeHeight/2;
-
-		loc.start = {}; // end.x and end.y are the bottom right point
-		loc.start.x = loc.x - def.nodeWidth/2 - def.nodeSpace;
-		loc.start.y = loc.y - def.nodeHeight/2;
-
-		return loc;
+		return nodeLoc(this.group.matrix);
 	};
 
 	// Connect nodes
@@ -189,15 +186,19 @@ function node(value, x, y, next) {
 
 	};
 
-	// Do drag stuff
+
+	/*
+	 * Drag Handler
+	 */
 	this.group.drag(function (dx, dy, posX, posY, e) {
+		// Drag move
 		var current = this.p; // get parent node of the group
 
 		var loc = current.loc();
-		var mouseLoc = {x: posX, y: posY};
+		var mouseLoc = {x: posX - offset.left, y: posY - offset.top};
 
 		if ( current.dragging == false ) { // on drag start
-			if (loc.x > posX) { // on the left half the rectangle
+			if (loc.x > mouseLoc.x) { // on the left half the rectangle
 				current.dragging = 'left';
 			} else {
 				current.dragging = 'right';
@@ -210,14 +211,20 @@ function node(value, x, y, next) {
 
 			current.pointerAt = false;
 
-			this.attr({
-				transform: this.data('origTransform') + (this.data('origTransform') ? "T" : "t") + [dx, dy]
-			});
+			var origMatrix = this.data('origMatrix');
+			var dragMatrix = new Snap.Matrix();
+			dragMatrix.translate(origMatrix.e + dx, origMatrix.f + dy);
+
+			if (nodeMatrixInBounds(dragMatrix))
+				this.attr({
+					transform: dragMatrix
+				});
 
 		} else {
 			current.pointerAt = mouseLoc;
 			if (current.pointerOn)
 				current.pointerOn.highlight = false;
+
 			current.pointerOn = false;
 			current.highlight = false;
 
@@ -231,10 +238,13 @@ function node(value, x, y, next) {
 
 		refreshNodes();
 
-	}, function (dx, dy, posX, posY, e) {
-		this.data('origTransform', this.transform().local );
+	}, function () {
+		// Drag start
+		// Store original matrix
+		this.data('origMatrix', this.matrix);
 
 	}, function () {
+		// Drag end
 		var current = this.p;
 
 		if (current.pointerOn) {
@@ -247,22 +257,23 @@ function node(value, x, y, next) {
 		current.pointerAt = false;
 		current.pointerOn = false;
 
-		if ( current.dragging == 'right') {
+		if ( current.dragging == 'left') {
+			current.dragging = false;
+			refreshNodes();
+		} else {
+			// Animate line after drag right end
 			current.updateLine(300, function () {
 				refreshNodes();
 			});
 			current.dragging = false;
-		} else {
-			current.dragging = false;
-			refreshNodes();
 		}
 
 	});
 
 
 	/* Done? Do some shindig (call animations and draw initial line) */
-	this.setPointerClass('bounceInDown');
-	this.setInnerClass('bounceInUp');
+	this.setPointerClass('fadeInDownBig');
+	this.setInnerClass('zoomInDown');
 	this.updateLine();
 }
 
@@ -298,7 +309,7 @@ var refreshNodes = function () {
 	if (! isEmpty(health.loops)) {
 		if (notice.loops == false) {
 			notice.loops = noty({
-				text: 'Invalid: Loop present between node pointers. It leads to funny consequences.',
+				text: 'Invalid list: Possible loop, more than 1 pointers to a node. It leads to funny consequences.',
 				type: 'error',
 				timeout: false,
 				closeWith: []
@@ -314,7 +325,7 @@ var refreshNodes = function () {
 	if (! isEmpty(health.duplicates)) {
 		if (notice.duplicates == false) {
 			notice.duplicates = noty({
-				text: 'Invalid: Duplicate values present. Only the first value will be accessible by functions. Try removing the value to fix the issue.',
+				text: 'Invalid list: Duplicate values present. Only the first value will be accessible by functions. Try removing the value to fix the issue.',
 				type: 'error',
 				timeout: false,
 				closeWith: []
