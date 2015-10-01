@@ -17,7 +17,6 @@ $.noty.themes.foundation = {
 		}
 	},
 	style: function() {
-
 		var containerSelector = this.options.layout.container.selector;
 		$(containerSelector).addClass('alert-list');
 

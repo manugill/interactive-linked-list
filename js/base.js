@@ -8,9 +8,11 @@ var busy = false; // used to block operations
 var health = {};
 health.loops = [];
 health.duplicate = [];
+health.disconnected = [];
 var notice = {};
 notice.loops = false;
 notice.duplicates = false;
+notice.disconnected = false;
 
 // Speed timeouts
 var timeout = {};
@@ -66,7 +68,7 @@ var codeEl = $('#code code')[0];
 
 
 /* Snap svg setup */
-var $editor = $('.editor');
+var $editor = $('#editor');
 var editorEl = $editor[0];
 var s = Snap(editorEl);
 
@@ -77,7 +79,7 @@ bound.left = 168;
 bound.bottom = 0;
 bound.right = 0;
 
-var calculateSizes = function () {
+function calculateSizes() {
 	screenWidth = $(window).width();
 	screenHeight = $(window).height();
 

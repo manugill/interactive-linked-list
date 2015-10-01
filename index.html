@@ -1,7 +1,7 @@
 <html>
 <head>
 
-	<title>FIT1008 - Linked List Mockup</title>
+	<title>Interactive Linked List</title>
 
 	<!-- Fonts -->
 	<link href='https://fonts.googleapis.com/css?family=Roboto:400,900,500,700,100,300|Roboto+Mono:400,100,300,500,700' rel='stylesheet' type='text/css'>
@@ -20,6 +20,9 @@
 	<script src="js/vendor/prism.custom.js"></script>
 	<script src="js/vendor/snap.svg.js"></script>
 
+	<script src="js/vendor/foundation.js"></script>
+	<script src="js/vendor/foundation.joyride.js"></script>
+
 </head>
 
 <body>
@@ -30,7 +33,7 @@
 		<div class="fullscreen-alert animated fadeInUp">Please switch to fullscreen or open the module on a larger screen to for a better experience.</div>
 
 		<!-- Options -->
-		<div class="options animated fadeInLeft">
+		<div id="options" class="animated fadeInLeft">
 			<h5>Insert</h5>
 			<form id="insert" class="row collapse">
 				<div class="small-6 columns">
@@ -80,7 +83,7 @@
 		</div>
 
 		<!-- Editor -->
-		<svg class="editor" version="1.1" xmlns="http://www.w3.org/2000/svg">
+		<svg id="editor" version="1.1" xmlns="http://www.w3.org/2000/svg">
 			<!-- Markers & Filters -->
 			<defs>
 				<marker id="triangle" viewBox="0 0 10 10" refX="10" refY="5" markerUnits="strokeWidth" fill="#fff" markerWidth="10" markerHeight="10" orient="auto">
@@ -166,7 +169,33 @@ class LinkedList(object):
         return count
 </code></pre>
 
+		<div id="jr1" style="position:absolute; z-index:-1; top:200px; left: 340px;"></div>
+		<div id="jr2" style="position:absolute; z-index:-1; top:70px; left: 160px;"></div>
+		<div id="jr3" style="position:absolute; z-index:-1; top:70px; right: 410px;"></div>
+
 	</div>
+
+	<ol class="joyride-list" data-joyride>
+		<li data-button="Continue" data-options="tip_animation: pop; prev_button: false">
+			<h4>Welcome!</h4>
+			<p>This is an interactive linked list that you can play around with, to understand the data structure better.</p>
+			<p>A short introduction will take you through the features.</p>
+		</li>
+		<li data-id="jr1" data-text="Next" data-options="tip_location: right; nub_position: left;">
+			<h4>The Editor</h4>
+			<p>The editor contains the head and the nodes, it represents the current state of the linked list.</p>
+			<p>You drag on the furst half of a node to move it, or first on the right half of a node to move the pointer.</p>
+		</li>
+		<li data-id="jr2" data-text="Next" data-options="tip_location: right; nub_position: left;">
+			<h4>The Actions</h4>
+			<p>There are the functions you can execute on the list.</p>
+		</li>
+		<li data-id="jr3" data-text="Next" data-options="tip_location: left; nub_position: right;">
+			<h4>The Code</h4>
+			<p>While functions are being executed, they will be reflected here highlighting the exact line being executed.</p>
+			<p class="show-for-medium-down"><strong>Your screen is too small to view the code</strong></p>
+		</li>
+	</ol>
 
 	<script src="js/base.js"></script>
 	<script src="js/helpers.js"></script>

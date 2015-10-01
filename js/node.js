@@ -279,7 +279,7 @@ function node(value, x, y) {
  * Global updates
  * Refresh nodes for any state updates
  */
-var refreshNodes = function () {
+function refreshNodes() {
 	var occurredNext = [];
 	var occurredValue = [];
 
@@ -292,15 +292,16 @@ var refreshNodes = function () {
 		// refresh node and its pointer
 		node.refresh();
 
+		occurredValue.push(node.value);
+
 		if (node.next)
 			occurredNext.push(node.next);
-
-		occurredValue.push(node.value);
 	});
 
-	// health check for loops
-	health.loops = findDuplicates(occurredNext);
-	health.duplicates = findDuplicates(occurredValue);
+	/* Health checks */
+	health.loops = getDuplicates(occurredNext);
+	health.duplicates = getDuplicates(occurredValue);
+	health.disconnected = getDifferences(n, occurredNext);
 
 	if (! isEmpty(health.loops)) {
 		if (notice.loops == false) {
@@ -321,7 +322,7 @@ var refreshNodes = function () {
 	if (! isEmpty(health.duplicates)) {
 		if (notice.duplicates == false) {
 			notice.duplicates = noty({
-				text: 'Invalid: Duplicate values present. Only the first value will be accessible by functions. Try removing the value to fix the issue.',
+				text: 'Invalid: Duplicate values present. Only the first value will be accessible by functions. Try removing the value.',
 				type: 'error',
 				timeout: false,
 				closeWith: []
@@ -331,6 +332,22 @@ var refreshNodes = function () {
 		if (notice.duplicates) {
 			notice.duplicates.close();
 			notice.duplicates = false;
+		}
+	}
+
+	if (! isEmpty(health.disconnected)) {
+		if (notice.disconnected == false) {
+			notice.disconnected = noty({
+				text: 'Invalid: Disconnected nodes present. Try reconnecting them back.',
+				type: 'error',
+				timeout: false,
+				closeWith: []
+			});
+		}
+	} else {
+		if (notice.disconnected) {
+			notice.disconnected.close();
+			notice.disconnected = false;
 		}
 	}
 }

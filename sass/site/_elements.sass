@@ -23,13 +23,7 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
 	margin: 0
 
 button, .button
-	width: 100%
-	padding: 0 10px
-	border-width: 2px
-	line-height: 58px
-	height: 60px
-	font-size: 30px
-	margin-bottom: 0
+	text-decoration: none !important
 	border-radius: $radius
 	transition: $transition
 	outline: none
@@ -73,27 +67,26 @@ button, .button
 				color: $info-button-bg-hover
 
 
-/**
+/*
  * Alerts
  */
 .alert-box
 	border-width: 0
-	padding: 12px 20px
+	padding: 10px 20px
 	font-weight: 400
-	font-size: 16px
+	font-size: 14px
 	line-height: 1.4
 
 .alert-list
-
 	.alert-box
 		margin-bottom: 0
-		margin-top: 2px
+		margin-top: 1px
 
 
-/**
+/*
  * Options
  */
-.options
+#options
 	position: absolute
 	top: 0
 	left: 0
@@ -103,6 +96,15 @@ button, .button
 	box-shadow: 0 0 0 3px rgba($dark, 0.1)
 	background: #fff
 	z-index: 20
+
+	button, .button
+		width: 100%
+		padding: 0 10px
+		border-width: 2px
+		line-height: 58px
+		height: 60px
+		font-size: 30px
+		margin-bottom: 0
 
 	form.row.collapse
 		.columns
@@ -117,7 +119,7 @@ button, .button
 					border-bottom-left-radius: 0
 
 
-/**
+/*
  * Code / prism.js
  */
 pre#code
@@ -146,3 +148,18 @@ pre#code
 
 		&:before
 			display: none
+
+
+/*
+ * Joyride
+ */
+.joyride-tip-guide
+	box-shadow: 0 0 0 3px rgba(255,255,255,0.1)
+	border-radius: 3px
+
+	h1, h2, h3, h4, h5, h6
+		color: inherit
+		margin-bottom: 10px
+
+	p
+		margin-bottom: 16px
