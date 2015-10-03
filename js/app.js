@@ -1,7 +1,6 @@
 /**
  * Setup UI and user usable functions
  */
-$(document).foundation();
 
 busy = true;
 
@@ -25,17 +24,16 @@ chain.add(200, function () {
 	n[0].updateLine();
 });
 chain.add(200, function () {
-	n[2] = new node(55, 140 + bound.left, 380);
+	n[2] = new node(55, 130 + bound.left, 380);
 	n[1].connect(n[2]);
 	n[1].updateLine();
 });
 chain.add(200, function () {
-	n[3] = new node(72, 320 + bound.left, 380);
+	n[3] = new node(72, 310 + bound.left, 380);
 	n[2].connect(n[3]);
 	n[2].updateLine();
 
 	busy = false; // Enable controls
-	$(document).foundation('joyride', 'start');
 });
 
 chain.start();
@@ -83,23 +81,29 @@ $('#insert').submit(function (e) {
 		});
 		chain.add(timeout.long, function () {
 			n[index].highlight = true;
-			refreshNodes();
 			n[index].setInnerClass('tada');
+			refreshNodes();
 
 			notification("Node successfully inserted.", 'success');
 
 			busy = false; // Enable controls
 		});
+		chain.add(timeout.long, function () {
+			n[index].highlight = false;
+		});
 
 		chain.start();
 
 	} else { // No location found
-		$.noty.clearQueue();
-		$.noty.closeAll();
-		noty({
+		if ( notice.noSpace ) {
+			notice.noSpace.close();
+			notice.noSpace = false;
+		}
+		notice.noSpace = noty({
 			text: "No more area on screen left to add nodes. Please move nodes around or remove some to make space.",
 			type: 'warning'
 		});
+
 		busy = false;
 	}
 });

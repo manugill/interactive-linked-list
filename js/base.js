@@ -13,6 +13,7 @@ var notice = {};
 notice.loops = false;
 notice.duplicates = false;
 notice.disconnected = false;
+notice.noSpace = false;
 
 // Speed timeouts
 var timeout = {};
@@ -62,34 +63,48 @@ def.attrPointer = {
 };
 
 
-/* Code elements */
-var code = $('#code');
-var codeEl = $('#code code')[0];
-
-
 /* Snap svg setup */
 var $editor = $('#editor');
 var editorEl = $editor[0];
 var s = Snap(editorEl);
 
+var base = {};
+base.nodes = s.group({
+	id: 'nodes'
+});
+base.pointers = s.group({
+	id: 'pointers'
+});
+
+
+
+/* UI elements */
+var $options = $('#options');
+var $code = $('#code');
+var codeEl = $('#code code')[0];
+
 // Editor bounds, screen size and offsets
-bound = {};
-bound.top = 0;
-bound.left = 168;
-bound.bottom = 0;
-bound.right = 0;
+var bound = {};
+var offset = {};
+var screenWidth;
+var screenHeight;
 
 function calculateSizes() {
-	screenWidth = $(window).width();
-	screenHeight = $(window).height();
+	var screenWidth = $(window).width();
+	var screenHeight = $(window).height();
 
-	offset = {};
+	bound.top = 0;
+	bound.left = $options.outerWidth();
+	bound.bottom = 40;
+	bound.right = 0;
+	//bound.right = $code.outerWidth();
+
 	offset.top = $editor.offset().top;
 	offset.left = $editor.offset().left;
 	offset.bottom = screenHeight - (offset.top + $editor.outerHeight());
 	offset.right = screenWidth - (offset.left + $editor.outerWidth());
-	offset.limitRight = screenWidth - (offset.right + offset.left);
-	offset.limitBottom = screenHeight - offset.bottom;
+	offset.limitRight = screenWidth - (offset.right + offset.left) - bound.right;
+	offset.limitBottom = screenHeight - offset.bottom - bound.bottom;
 }
 calculateSizes();
 
@@ -97,14 +112,10 @@ $(window).resize(function() {
 	calculateSizes();
 });
 
-
-function base() {
-	this.nodes = s.group({
-		id: 'nodes'
-	});
-	this.pointers = s.group({
-		id: 'pointers'
-	});
-}
-
-var base = new base();
+// Joyride setup
+$(document).foundation({
+	joyride: {
+		tip_animation_fade_speed : 200
+	}
+});
+$(document).foundation('joyride', 'start');

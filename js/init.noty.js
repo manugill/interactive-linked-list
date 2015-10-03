@@ -76,5 +76,26 @@ $.noty.defaults = {
 		afterClose: function() {},
 		onCloseClick: function() {},
 	},
+	container: {
+		object  : '<ul id="noty_bottomCenter_layout_container" />',
+		selector: 'ul#noty_bottomCenter_layout_container',
+		style   : function() {
+			$(this).css({
+				bottom: 15,
+				left : 0,
+				position : 'fixed',
+				width: '310px',
+				height: 'auto',
+				margin: 0,
+				padding: 0,
+				listStyleType: 'none',
+				zIndex: 1000
+			});
+
+			$(this).css({
+				left: ($(window).width() - $(this).outerWidth(false)) / 2 + 'px'
+			});
+		}
+	},
 	buttons: false // an array of buttons
 };

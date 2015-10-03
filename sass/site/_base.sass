@@ -19,7 +19,7 @@ body
 	margin: 0 auto
 
 p
-	line-height: 1.4
+	line-height: 1.35
 	color: inherit
 
 h1, h2, h3, h4, h5, h6
@@ -71,10 +71,13 @@ iframe
 	border: 0
 
 hr
-	margin: 30px -20px
+	margin: 25px -20px
 	height: 0
 	border: 0 solid #eee
 	border-top-width: 1px
+
+	&.long
+		margin: 30px -20px
 
 
 /* Helpers */
@@ -97,3 +100,13 @@ hr
 	height: 1px
 	clip: rect(1px 1px 1px 1px)
 	clip: rect(1px, 1px, 1px, 1px)
+
+
+// Scrollbar
+::-webkit-scrollbar
+	height: 7px
+	width: 7px
+	background: rgba($dark, 0.05)
+
+::-webkit-scrollbar-thumb
+	background: rgba($dark, 0.1)

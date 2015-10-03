@@ -247,13 +247,13 @@ function notification(text, type) {
 
 // Highlight code in Prism
 function highlightCode(range) {
-	code.attr('data-line', range);
+	$code.attr('data-line', range);
 	Prism.highlightElement(codeEl);
 
 	var lineHighlight = $('.line-highlight:first');
-	var offset = lineHighlight.offset().top + $('pre').scrollTop();
+	var offset = lineHighlight.offset().top + $code.scrollTop();
 
-	$('pre').animate({
+	$code.animate({
 		scrollTop: offset
-	});
+	}, 300);
 };

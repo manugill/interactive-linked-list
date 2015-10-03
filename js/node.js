@@ -299,55 +299,59 @@ function refreshNodes() {
 	});
 
 	/* Health checks */
-	health.loops = getDuplicates(occurredNext);
-	health.duplicates = getDuplicates(occurredValue);
-	health.disconnected = getDifferences(n, occurredNext);
+	if ( ! busy ) {
+		health.loops = getDuplicates(occurredNext);
+		health.duplicates = getDuplicates(occurredValue);
+		health.disconnected = getDifferences(n, occurredNext);
 
-	if (! isEmpty(health.loops)) {
-		if (notice.loops == false) {
-			notice.loops = noty({
-				text: 'Invalid: Possible loop, more than 1 pointers to a single node. It can lead to infinite loops.',
-				type: 'error',
-				timeout: false,
-				closeWith: []
-			});
+		if (! isEmpty(health.loops)) {
+			if (notice.loops == false) {
+				notice.loops = noty({
+					text: 'Invalid: Possible loop, more than 1 pointers to a single node. <span data-tooltip class="has-tip tip-top" title="Tooltips are awesome, you should totally use them!">...</span>',
+					type: 'error',
+					timeout: false,
+					closeWith: []
+				});
+			}
+		} else {
+			if (notice.loops) {
+				notice.loops.close();
+				notice.loops = false;
+			}
 		}
-	} else {
-		if (notice.loops) {
-			notice.loops.close();
-			notice.loops = false;
-		}
-	}
 
-	if (! isEmpty(health.duplicates)) {
-		if (notice.duplicates == false) {
-			notice.duplicates = noty({
-				text: 'Invalid: Duplicate values present. Only the first value will be accessible by functions. Try removing the value.',
-				type: 'error',
-				timeout: false,
-				closeWith: []
-			});
+		if (! isEmpty(health.duplicates)) {
+			if (notice.duplicates == false) {
+				notice.duplicates = noty({
+					text: 'Invalid: Duplicate values present. Only the first value will be accessible by functions. Try removing the value.',
+					type: 'error',
+					timeout: false,
+					closeWith: []
+				});
+			}
+		} else {
+			if (notice.duplicates) {
+				notice.duplicates.close();
+				notice.duplicates = false;
+			}
 		}
-	} else {
-		if (notice.duplicates) {
-			notice.duplicates.close();
-			notice.duplicates = false;
-		}
-	}
 
-	if (! isEmpty(health.disconnected)) {
-		if (notice.disconnected == false) {
-			notice.disconnected = noty({
-				text: 'Invalid: Disconnected nodes present. Try reconnecting them back.',
-				type: 'error',
-				timeout: false,
-				closeWith: []
-			});
+		if (! isEmpty(health.disconnected)) {
+			if (notice.disconnected == false) {
+				notice.disconnected = noty({
+					text: 'Invalid: Disconnected nodes present. Try reconnecting them back.',
+					type: 'error',
+					timeout: false,
+					closeWith: []
+				});
+			}
+		} else {
+			if (notice.disconnected) {
+				notice.disconnected.close();
+				notice.disconnected = false;
+			}
 		}
-	} else {
-		if (notice.disconnected) {
-			notice.disconnected.close();
-			notice.disconnected = false;
-		}
+
+		$(document).foundation('tooltip', 'reflow');
 	}
 }

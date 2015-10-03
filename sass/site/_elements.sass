@@ -2,12 +2,14 @@
  * Contains Foundation styling overrides
  */
 
-input:not([type]), input[type=text], input[type=password], input[type=date], input[type=datetime], input[type=datetime-local], input[type=month], input[type=week], input[type=email], input[type=number], input[type=search], input[type=tel], input[type=time], input[type=url], input[type=color], select
+input:not([type]), input[type=text], input[type=password], input[type=date], input[type=datetime], input[type=datetime-local], input[type=month], input[type=week], input[type=email], input[type=number], input[type=search], input[type=tel], input[type=time], input[type=url], input[type=color]
 	text-align: center
 	font-family: $family-mono
+	font-weight: 300
 	font-size: 26px
 	line-height: 40px
 	padding:0 10px
+	color: #444
 	border: 2px solid #eee
 	letter-spacing: -1px
 	height: 60px
@@ -22,8 +24,22 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
 	appearance: none
 	margin: 0
 
+select
+	font-size: 16px
+	font-weight: 400
+	padding: 5px 10px
+
+label
+	line-height: 1.2
+	margin-bottom: 2px
+
+.switch
+	margin-bottom: 15px
+
+/* Buttons */
 button, .button
 	text-decoration: none !important
+	font-family: $family
 	border-radius: $radius
 	transition: $transition
 	outline: none
@@ -96,6 +112,8 @@ button, .button
 	box-shadow: 0 0 0 3px rgba($dark, 0.1)
 	background: #fff
 	z-index: 20
+	overflow: hidden
+	overflow-y: auto
 
 	button, .button
 		width: 100%
@@ -122,14 +140,13 @@ button, .button
 /*
  * Code / prism.js
  */
-pre#code
+#code
 	position: absolute
 	top: 0
 	right: 0
 	height: 100%
 	width: 420px
-	overflow: hidden
-	z-index: 5
+	z-index: 4
 	display: block
 	margin: 0
 	padding: 15px 15px
@@ -137,6 +154,8 @@ pre#code
 	box-shadow: 0 0 0 3px rgba($dark, 0.7)
 	font-size: 14px
 	font-weight: 400
+	overflow: hidden
+	overflow-y: auto
 
 	border-radius: 0
 
@@ -154,7 +173,8 @@ pre#code
  * Joyride
  */
 .joyride-tip-guide
-	box-shadow: 0 0 0 3px rgba(255,255,255,0.1)
+	background: #333
+	box-shadow: 0 0 0 3px rgba($light, 0.1)
 	border-radius: 3px
 
 	h1, h2, h3, h4, h5, h6
@@ -163,3 +183,23 @@ pre#code
 
 	p
 		margin-bottom: 16px
+
+	.joyride-content-wrapper
+		padding: 20px
+
+	.button.small
+		padding: 10px 35px
+		line-height: 20px
+		vertical-align: top
+		background: rgba($light, 0.075)
+		border: 2px solid rgba($light, 0.8)
+		font-size: 16px
+		text-transform: uppercase
+
+		&:hover
+			background: rgba($light, 0.25)
+
+		&.joyride-prev-tip
+			padding-left: 15px
+			padding-right: 15px
+			opacity: 0.8

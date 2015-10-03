@@ -14,6 +14,8 @@
 	<link rel="stylesheet" href="app.css">
 
 	<!-- JS -->
+	<script src="js/vendor/modernizr.js"></script>
+	<script src="js/vendor/fastclick.js"></script>
 	<script src="js/vendor/jquery-2.1.4.min.js"></script>
 	<script src="js/vendor/underscore-min.js"></script>
 	<script src="js/vendor/jquery.noty.packaged.js"></script>
@@ -22,6 +24,9 @@
 
 	<script src="js/vendor/foundation.js"></script>
 	<script src="js/vendor/foundation.joyride.js"></script>
+	<script src="js/vendor/foundation.tooltip.js"></script>
+	<script src="js/vendor/foundation.dropdown.js"></script>
+	<script src="js/vendor/jquery.cookie.js"></script>
 
 </head>
 
@@ -30,10 +35,10 @@
 	<div class="wrapper">
 
 		<!-- Fullscreen alert -->
-		<div class="fullscreen-alert animated fadeInUp">Please switch to fullscreen or open the module on a larger screen to for a better experience.</div>
+		<div class="fullscreen-alert animated fadeInUp">Please switch to fullscreen or open the page on a larger screen for a better experience.</div>
 
 		<!-- Options -->
-		<div id="options" class="animated fadeInLeft">
+		<div id="options" class="animated slideInLeft">
 			<h5>Insert</h5>
 			<form id="insert" class="row collapse">
 				<div class="small-6 columns">
@@ -68,7 +73,7 @@
 				</div>
 			</form>
 
-			<hr>
+			<hr class="long">
 
 			<h4>Goals (0/4)</h4>
 			<div class="task">
@@ -79,6 +84,21 @@
 			<div class="progress">
 				<span class="meter success" style="width: 2%"></span>
 			</div>
+
+			<hr>
+
+			<label>Notifications</label>
+			<div class="switch tiny">
+				<input id="exampleCheckboxSwitch" type="checkbox">
+				<label for="exampleCheckboxSwitch"></label>
+			</div> 
+
+			<label>Speed</label>
+			<select>
+				<option value="slow">Slow</option>
+				<option value="normal">Normal</option>
+				<option value="fast">Fast</option>
+			</select>
 
 		</div>
 
@@ -117,7 +137,7 @@
 		</svg>
 
 		<!-- Code -->
-		<pre id="code" class="language-python animated fadeInRight"><code>class Node(object):
+		<pre id="code" class="language-python animated slideInRight"><code>class Node(object):
     def __init__(self, data=None, next=None):
         self.data = data
         self.next = next
@@ -176,24 +196,25 @@ class LinkedList(object):
 	</div>
 
 	<ol class="joyride-list" data-joyride>
-		<li data-button="Continue" data-options="tip_animation: pop; prev_button: false">
+		<li data-button="Next" data-options="prev_button:false;">
 			<h4>Welcome!</h4>
 			<p>This is an interactive linked list that you can play around with, to understand the data structure better.</p>
 			<p>A short introduction will take you through the features.</p>
 		</li>
-		<li data-id="jr1" data-text="Next" data-options="tip_location: right; nub_position: left;">
+		<li data-id="jr1" data-prev-text="&lsaquo;" data-text="Next" data-options="tip_location:right; nub_position:left;">
 			<h4>The Editor</h4>
 			<p>The editor contains the head and the nodes, it represents the current state of the linked list.</p>
-			<p>You drag on the furst half of a node to move it, or first on the right half of a node to move the pointer.</p>
+			<p>You can drag on the first half of a node to move it, or on the right half of a node to move the pointer.</p>
 		</li>
-		<li data-id="jr2" data-text="Next" data-options="tip_location: right; nub_position: left;">
-			<h4>The Actions</h4>
-			<p>There are the functions you can execute on the list.</p>
+		<li data-id="jr2" data-prev-text="&lsaquo;" data-text="Next" data-options="tip_location:right;  nub_position:left;">
+			<h4>Functions &amp; Goals</h4>
+			<p>These are 3 functions you can execute on the list. As they are being performed, they will be highlighted on the editor.</p>
+			<p>Below the functions, are goals that you can complete. Feel free to finish them as you feel comfortable.</p>
 		</li>
-		<li data-id="jr3" data-text="Next" data-options="tip_location: left; nub_position: right;">
-			<h4>The Code</h4>
-			<p>While functions are being executed, they will be reflected here highlighting the exact line being executed.</p>
-			<p class="show-for-medium-down"><strong>Your screen is too small to view the code</strong></p>
+		<li data-id="jr3" data-prev-text="&lsaquo;" data-text="Finish" data-options="tip_location:left;  nub_position:right;">
+			<h4>Code Highlighting</h4>
+			<p>While functions are being executed, they will also be reflected in the code by highlighting the line being executed.</p>
+			<p class="show-for-medium-down"><strong>Your screen is currently too small to view the code. Please use the fullscreen option on Alexandria to be able to view the code highlighter on the right.</strong>
 		</li>
 	</ol>
 
