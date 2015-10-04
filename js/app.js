@@ -12,7 +12,7 @@ head.group.attr({
 
 // Create new nodes in a chain
 var chain = new TimeoutChain();
-/*
+
 chain.add(200, function () {
 	n[0] = new node(40, 120 + bound.left, 230);
 	head.connect(n[0]);
@@ -27,11 +27,11 @@ chain.add(200, function () {
 	n[2] = new node(55, 150 + bound.left, 380);
 	n[1].connect(n[2]);
 	n[1].updateLine();
-});*/
+});
 chain.add(200, function () {
-	n[0] = new node(72, 330 + bound.left, 380);
-	head.connect(n[0]);
-	head.updateLine();
+	n[3] = new node(72, 330 + bound.left, 380);
+	n[2].connect(n[3]);
+	n[2].updateLine();
 
 	busy = false; // Enable controls
 
