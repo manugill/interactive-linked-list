@@ -9,28 +9,12 @@ var health = {};
 health.loops = [];
 health.duplicate = [];
 health.disconnected = [];
+
 var notice = {};
 notice.loops = false;
 notice.duplicates = false;
 notice.disconnected = false;
 notice.noSpace = false;
-
-// Speed timeouts
-var timeout = {};
-// Normal speed
-timeout.long = 1500;
-timeout.medium = 1000;
-timeout.short = 500;
-timeout.notification = 4000;
-timeout.disableNotifications = false;
-
-/*// Fast speed
-timeout.long = 25;
-timeout.medium = 10;
-timeout.short = 10;
-timeout.notification = 4000;
-timeout.disableNotifications = true;
-*/
 
 // Defaults
 var def = {};
@@ -111,6 +95,42 @@ calculateSizes();
 $(window).resize(function() {
 	calculateSizes();
 });
+
+
+/* Default settings and changes */
+var showNotifications = true;
+var speed = {normal: 1500, short: 500, updateLine: 300};
+
+$('#settings-toggle').click(function () {
+	$('#settings').toggle();
+	$(this).find('i').toggleClass('ion-ios-arrow-up');
+});
+
+$('#notification-switch').change(function () {
+	if ( $(this).is(":checked") )
+		showNotifications = true;
+	else
+		showNotifications = false;
+});
+
+$('#speed').change(function () {
+	$('body').removeClass('animations-fast animations-slow');
+
+	var value = $(this).val();
+	if ( value == 'slow' ) {
+		speed = {normal: 3000, short: 1500, updateLine: 500};
+		$('body').addClass('animations-slow');
+	} else if ( value == 'fast' ) {
+		speed = {normal: 80, short: 60, updateLine: 50};
+
+		$('body').addClass('animations-fast');
+		$('#notification-switch').removeAttr('checked').change();
+	} else {
+		speed = {normal: 1500, short: 500, updateLine: 300};
+	}
+});
+
+
 
 // Joyride setup
 $(document).foundation({

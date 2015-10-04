@@ -29,115 +29,119 @@
 	<script src="js/vendor/jquery.cookie.js"></script>
 
 </head>
-
 <body>
 
-	<div class="wrapper">
+<div class="wrapper">
 
-		<!-- Fullscreen alert -->
-		<div class="fullscreen-alert animated fadeInUp">Please switch to fullscreen or open the page on a larger screen for a better experience.</div>
+	<!-- Options -->
+	<div id="options" class="animated slideInLeft">
+		<h5>Insert</h5>
+		<form id="insert" class="row collapse">
+			<div class="small-6 columns">
+				<input type="number" id="insert-text" value="30" required maxlength="3">
+			</div>
+			<div class="small-6 columns">
+				<button type="submit" class="success hollow"><i class="ion-ios-plus"></i></button>
+			</div>
+		</form>
 
-		<!-- Options -->
-		<div id="options" class="animated slideInLeft">
-			<h5>Insert</h5>
-			<form id="insert" class="row collapse">
-				<div class="small-6 columns">
-					<input type="number" id="insert-text" value="30" required maxlength="2">
-				</div>
-				<div class="small-6 columns">
-					<button type="submit" class="success hollow"><i class="ion-ios-plus"></i></button>
-				</div>
-			</form>
+		<hr>
 
-			<hr>
+		<h5>Search</h5>
+		<form id="search" class="row collapse">
+			<div class="small-6 columns">
+				<input type="number" id="search-text" value="72" required maxlength="3">
+			</div>
+			<div class="small-6 columns">
+				<button type="submit" class="success hollow"><i class="ion-ios-search-strong"></i></button>
+			</div>
+		</form>
 
-			<h5>Search</h5>
-			<form id="search" class="row collapse">
-				<div class="small-6 columns">
-					<input type="number" id="search-text" value="72" required maxlength="2">
-				</div>
-				<div class="small-6 columns">
-					<button type="submit" class="success hollow"><i class="ion-ios-search-strong"></i></button>
-				</div>
-			</form>
+		<hr>
 
-			<hr>
+		<h5>Remove</h5>
+		<form id="remove" class="row collapse">
+			<div class="small-6 columns">
+				<input type="number" id="remove-text" value="123" required maxlength="3">
+			</div>
+			<div class="small-6 columns">
+				<button type="submit" class="success hollow"><i class="ion-ios-close"></i></button>
+			</div>
+		</form>
 
-			<h5>Remove</h5>
-			<form id="remove" class="row collapse">
-				<div class="small-6 columns">
-					<input type="number" id="remove-text" value="55" required maxlength="2">
-				</div>
-				<div class="small-6 columns">
-					<button type="submit" class="success hollow"><i class="ion-ios-close"></i></button>
-				</div>
-			</form>
+		<hr class="long">
 
-			<hr class="long">
+		<h4>Goals (<span id="goals-completed">0</span>/<span id="goals-max">4</span>)</h4>
+		<div id="goal">
+			<h6><i class="ion-ios-bell"></i> Task <span id="goal-count">1</span></h6>
+			<p id="goal-text"></p>
+		</div>
 
-			<h4>Goals (0/4)</h4>
-			<div class="task">
-				<h6><i class="ion-ios-bell"></i> Task 1</h6>
-				<p>Insert 10 to the linked list.</p>
+		<div class="progress">
+			<span id="goal-meter" class="meter success" style="width: 2%"></span>
+		</div>
+
+		<hr>
+
+		<a href="#" id="settings-toggle">Settings <i class="ion-ios-arrow-down"></i></a>
+
+		<div id="settings" class="hide animated fadeInRight">
+			<label for="notification-switch">Notifications</label>
+			<div class="switch radius">
+				<input id="notification-switch" type="checkbox" checked>
+				<label for="notification-switch"></label>
 			</div>
 
-			<div class="progress">
-				<span class="meter success" style="width: 2%"></span>
-			</div>
+			<div class="clear"></div>
 
-			<hr>
-
-			<label>Notifications</label>
-			<div class="switch tiny">
-				<input id="exampleCheckboxSwitch" type="checkbox">
-				<label for="exampleCheckboxSwitch"></label>
-			</div> 
-
-			<label>Speed</label>
-			<select>
+			<label for="speed">Speed</label>
+			<select id="speed" class="radius">
 				<option value="slow">Slow</option>
-				<option value="normal">Normal</option>
+				<option value="normal" selected>Normal</option>
 				<option value="fast">Fast</option>
 			</select>
 
+			<div class="clear"></div>
 		</div>
 
-		<!-- Editor -->
-		<svg id="editor" version="1.1" xmlns="http://www.w3.org/2000/svg">
-			<!-- Markers & Filters -->
-			<defs>
-				<marker id="triangle" viewBox="0 0 10 10" refX="10" refY="5" markerUnits="strokeWidth" fill="#fff" markerWidth="10" markerHeight="10" orient="auto">
-					<path d="M 0 0 L 10 5 L 0 10 z" />
-				</marker>
+	</div>
 
-				<filter id="dragging" x="-50%" y="-50%" width="200%" height="200%">
-					<feGaussianBlur in="SourceAlpha" stdDeviation="2" />
-					<feOffset dx="0" dy="6" result="offsetblur" />
-					<feFlood flood-color="rgba(0,0,0,0.2)" />
-					<feComposite in2="offsetblur" operator="in" />
-					<feMerge>
-						<feMergeNode />
-						<feMergeNode in="SourceGraphic" />
-					</feMerge>
-				</filter>
+	<!-- Editor -->
+	<svg id="editor" version="1.1" xmlns="http://www.w3.org/2000/svg">
+		<!-- Markers & Filters -->
+		<defs>
+			<marker id="triangle" viewBox="0 0 10 10" refX="10" refY="5" markerUnits="strokeWidth" fill="#fff" markerWidth="10" markerHeight="10" orient="auto">
+				<path d="M 0 0 L 10 5 L 0 10 z" />
+			</marker>
 
-				<filter id="highlight" x="-50%" y="-50%" width="200%" height="200%">
-					<feGaussianBlur in="SourceAlpha" stdDeviation="3" />
-					<feOffset dx="0" dy="0" result="offsetblur" />
-					<feFlood flood-color="#fff" />
-					<feComposite in2="offsetblur" operator="in" />
-					<feMerge>
-						<feMergeNode />
-						<feMergeNode in="SourceGraphic" />
-					</feMerge>
-				</filter>
-			</defs>
+			<filter id="dragging" x="-50%" y="-50%" width="200%" height="200%">
+				<feGaussianBlur in="SourceAlpha" stdDeviation="2" />
+				<feOffset dx="0" dy="6" result="offsetblur" />
+				<feFlood flood-color="rgba(0,0,0,0.2)" />
+				<feComposite in2="offsetblur" operator="in" />
+				<feMerge>
+					<feMergeNode />
+					<feMergeNode in="SourceGraphic" />
+				</feMerge>
+			</filter>
 
-			<!-- Dynamic stuff happens around here -->
-		</svg>
+			<filter id="highlight" x="-50%" y="-50%" width="200%" height="200%">
+				<feGaussianBlur in="SourceAlpha" stdDeviation="3" />
+				<feOffset dx="0" dy="0" result="offsetblur" />
+				<feFlood flood-color="#fff" />
+				<feComposite in2="offsetblur" operator="in" />
+				<feMerge>
+					<feMergeNode />
+					<feMergeNode in="SourceGraphic" />
+				</feMerge>
+			</filter>
+		</defs>
 
-		<!-- Code -->
-		<pre id="code" class="language-python animated slideInRight"><code>class Node(object):
+		<!-- Dynamic stuff happens around here -->
+	</svg>
+
+	<!-- Code -->
+	<pre id="code" class="language-python animated slideInRight"><code>class Node(object):
     def __init__(self, data=None, next=None):
         self.data = data
         self.next = next
@@ -189,13 +193,13 @@ class LinkedList(object):
         return count
 </code></pre>
 
-		<div id="jr1" style="position:absolute; z-index:-1; top:200px; left: 340px;"></div>
-		<div id="jr2" style="position:absolute; z-index:-1; top:70px; left: 160px;"></div>
-		<div id="jr3" style="position:absolute; z-index:-1; top:70px; right: 410px;"></div>
-
+	<div class="joyride-tips">
+		<div id="jr1"></div>
+		<div id="jr2"></div>
+		<div id="jr3"></div>
 	</div>
 
-	<ol class="joyride-list" data-joyride>
+	<ol class="joyride-list" data-joyride2>
 		<li data-button="Next" data-options="prev_button:false;">
 			<h4>Welcome!</h4>
 			<p>This is an interactive linked list that you can play around with, to understand the data structure better.</p>
@@ -212,16 +216,24 @@ class LinkedList(object):
 			<p>Below the functions, are goals that you can complete. Feel free to finish them as you feel comfortable.</p>
 		</li>
 		<li data-id="jr3" data-prev-text="&lsaquo;" data-text="Finish" data-options="tip_location:left;  nub_position:right;">
-			<h4>Code Highlighting</h4>
-			<p>While functions are being executed, they will also be reflected in the code by highlighting the line being executed.</p>
+			<h4>Code &amp; Notifications</h4>
+			<p>While functions are being executed, they will be reflected in the code by highlighting the line being executed.</p>
+			<p>Along with this, there will be notifications popping up at the bottom of the screen that explain each step.</p>
+			<p>If you put the linked list in an invalid state, notifications 
 			<p class="show-for-medium-down"><strong>Your screen is currently too small to view the code. Please use the fullscreen option on Alexandria to be able to view the code highlighter on the right.</strong>
 		</li>
 	</ol>
+
+	<!-- Fullscreen alert -->
+	<div class="fullscreen-alert animated fadeInUp">Please switch to fullscreen or open the page on a larger screen for a better experience.</div>
+
+</div>
 
 	<script src="js/base.js"></script>
 	<script src="js/helpers.js"></script>
 	<script src="js/init.noty.js"></script>
 	<script src="js/node.js"></script>
+	<script src="js/goals.js"></script>
 	<script src="js/app.js"></script>
 
 </body>

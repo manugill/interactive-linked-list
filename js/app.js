@@ -5,35 +5,37 @@
 busy = true;
 
 // Create head
-var head = new node('', 40 + bound.left, 80);
+var head = new node('', 60 + bound.left, 80);
 head.group.attr({
 	id: 'head'
 });
 
 // Create new nodes in a chain
 var chain = new TimeoutChain();
-
+/*
 chain.add(200, function () {
-	n[0] = new node(40, 100 + bound.left, 230);
+	n[0] = new node(40, 120 + bound.left, 230);
 	head.connect(n[0]);
 	head.updateLine();
 });
 chain.add(200, function () {
-	n[1] = new node(16, 280 + bound.left, 230);
+	n[1] = new node(16, 300 + bound.left, 230);
 	n[0].connect(n[1]);
 	n[0].updateLine();
 });
 chain.add(200, function () {
-	n[2] = new node(55, 130 + bound.left, 380);
+	n[2] = new node(55, 150 + bound.left, 380);
 	n[1].connect(n[2]);
 	n[1].updateLine();
-});
+});*/
 chain.add(200, function () {
-	n[3] = new node(72, 310 + bound.left, 380);
-	n[2].connect(n[3]);
-	n[2].updateLine();
+	n[0] = new node(72, 330 + bound.left, 380);
+	head.connect(n[0]);
+	head.updateLine();
 
 	busy = false; // Enable controls
+
+	generateGoal();
 });
 
 chain.start();
@@ -55,8 +57,8 @@ $('#insert').submit(function (e) {
 	var loc = nextNodeLoc();
 
 	if (loc) { // An empty location found
-		text.val(Math.floor((Math.random() * 99) + 1));
-		
+		text.val(randomInt(1, 999));
+
 		n[index] = new node(val, loc.x, loc.y);
 
 		notification("Created a new node.");
@@ -65,33 +67,32 @@ $('#insert').submit(function (e) {
 		// Delayed executed steps
 		var chain = new TimeoutChain();
 
-		chain.add(timeout.long, function () {
+		chain.add(speed.normal, function () {
 			n[index].connect(head.next);
 			n[index].updateLine(500);
 
 			notification("Set node's pointer to head.");
 			highlightCode('11,13');
 		});
-		chain.add(timeout.long, function () {
+		chain.add(speed.normal, function () {
 			head.connect(n[index]);
 			head.updateLine(500);
 
 			notification("Set head pointer to the new node.");
 			highlightCode('11,14');
 		});
-		chain.add(timeout.long, function () {
+		chain.add(speed.normal, function () {
 			n[index].highlight = true;
-			n[index].setInnerClass('tada');
-			refreshNodes();
 
 			notification("Node successfully inserted.", 'success');
 
 			busy = false; // Enable controls
-		});
-		chain.add(timeout.long, function () {
-			n[index].highlight = false;
-		});
 
+			refreshNodes();
+			n[index].highlight = false;
+
+			checkGoal('insert', n[index].value);
+		});
 		chain.start();
 
 	} else { // No location found
@@ -99,8 +100,9 @@ $('#insert').submit(function (e) {
 			notice.noSpace.close();
 			notice.noSpace = false;
 		}
+		$.noty.clearQueue();
 		notice.noSpace = noty({
-			text: "No more area on screen left to add nodes. Please move nodes around or remove some to make space.",
+			text: "No more area on screen left to add nodes. Try moving some nodes around to create space",
 			type: 'warning'
 		});
 
@@ -135,7 +137,7 @@ $('#remove').submit(function (e) {
 
 	setTimeout(function () {
 		searchNode(value, deleteNode, ',36-37');
-	}, timeout.long);
+	}, speed.normal);
 
 });
 
@@ -177,20 +179,22 @@ function searchNode(searchVal, action, codeRange) {
 						current.setInnerClass('tada');
 
 						notification("Node found!", 'success');
-						highlightCode('16,31-34' + codeRange);
+						highlightCode('16,30-34' + codeRange);
 
-						if ( action )
+						if ( action ) {
 							action(current, nodePrev);
-						else
-							busy = false;
-					}, timeout.long);
+						} else {
+							busy = false; // Enable controls
+							checkGoal('search', searchVal);
+						}
+					}, speed.normal);
 
 					clearInterval(searching);
 				} else {
 					highlightCode('16,21,24-26' + codeRange);
 				}
 
-			}, timeout.short);
+			}, speed.short);
 
 		} else {
 			notification("Data not found, linked list exhausted.", 'error');
@@ -204,27 +208,28 @@ function searchNode(searchVal, action, codeRange) {
 			clearInterval(searching);
 		}
 
-	}, timeout.long);
+	}, speed.normal);
 };
 
 /* Delete function */
 function deleteNode(node, nodePrev) {
 	var chain = new TimeoutChain();
 
-	chain.add(timeout.long, function () {
+	chain.add(speed.normal, function () {
 		nodePrev.connect(node.next);
-		nodePrev.updateLine(500);
+		nodePrev.updateLine(speed.updateLine);
 
 		notification("Set previous pointer to current's next.");
 		highlightCode('36,39-40');
 	});
-	chain.add(timeout.long, function () {
+	chain.add(speed.normal, function () {
 		notification("Delete successful! The node can't be accessed anymore by functions and will be garbage collected.", 'success');
 
 		n = _.reject(n, function (el) { return el === node; });
 		node.delete();
 
 		busy = false; // Enable controls
+		checkGoal('remove', node.value);
 	});
 
 	chain.start();

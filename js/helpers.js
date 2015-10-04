@@ -159,9 +159,9 @@ function nextNodeLoc() {
 
 		// Enlarge the rectangle by a little
 		nextLoc.start.x -= 40;
-		nextLoc.start.y -= 40;
+		nextLoc.start.y -= 30;
 		nextLoc.end.x += 40;
-		nextLoc.end.y += 40;
+		nextLoc.end.y += 30;
 
 		collision = false;
 
@@ -178,11 +178,13 @@ function nextNodeLoc() {
 			y += 2;
 
 			// Go to next line if we've reached a bound
-			if (nextLoc.end.x > offset.limitRight)
-				x = 200 + bound.left;
+			if (nextLoc.end.x > offset.limitRight + 20) {
+				x = 150 + bound.left;
+				y -= 4;
+			}
 
 			// No more area left to explore
-			if (nextLoc.end.y > offset.limitBottom)
+			if (nextLoc.end.y > offset.limitBottom + 20)
 				return false;
 
 		} else {
@@ -231,14 +233,31 @@ function getDifferences(list1, list2) {
 }
 
 
+// Get node values
+function getNodeValues() {
+	var values = [];
 
-/* UI update */
+	n.forEach(function (node) {
+		values.push(node.value);
+	})
+
+	return values;
+}
+
+
+// Get random integer
+function randomInt(min, max) {
+	return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+
+/* UI updates */
 // Show basic notification using Noty
 function notification(text, type) {
 	if (type === undefined || type == false)
 		type = 'alert';
 
-	if (! timeout.disableNotifications)
+	if (showNotifications)
 		noty({
 			text: text,
 			type: type

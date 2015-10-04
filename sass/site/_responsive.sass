@@ -1,7 +1,8 @@
 /**
- * Responsive queries
+ * Responsive stuff
  */
 
+// Screen alert
 .fullscreen-alert
 	display: none
 	position: fixed
@@ -26,6 +27,24 @@
 		background: rgba($light, 0.2)
 		border-radius: 5px
 
+// Joyride pointers
+.joyride-tips
+	div
+		position: absolute
+		z-index: -1
+
+#jr1
+	top: 200px
+	left: 340px
+#jr2
+	top: 70px
+	left: 160px
+#jr3
+	top: 70px
+	right: 410px
+
+
+/* Media queries */
 @media screen and (min-width: em-calc(1600))
 	.wrapper
 		box-shadow: 0 0 100px rgba($light, 0.2)

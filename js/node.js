@@ -44,11 +44,12 @@ function node(value, x, y) {
 	this.r2.attr(def.attrRect);
 	this.r2.appendTo(this.inner);
 
+	// Place at negative 25% node width + space
 	this.t = s.text(-(def.nodeWidth/4 + def.nodeSpace), 9, this.value)
 	this.t.attr(def.attrText);
 	this.t.appendTo(this.inner);
 
-	// Account for extra spacing
+	// Place at 75% node width + space
 	this.c1X = def.nodeWidth/2 + def.nodeSpace - def.nodeWidth/4;
 	this.c1Y = 0;
 	this.c1 = s.circle(this.c1X, this.c1Y, 3);
@@ -258,7 +259,7 @@ function node(value, x, y) {
 			refreshNodes();
 		} else {
 			// Animate line after drag right end
-			current.updateLine(300, function () {
+			current.updateLine(speed.updateLine, function () {
 				refreshNodes();
 			});
 			current.dragging = false;
@@ -268,8 +269,8 @@ function node(value, x, y) {
 
 
 	/* Done? Do some shindig (call animations and draw initial line) */
-	this.setPointerClass('fadeInDownBig');
-	this.setInnerClass('zoomInDown');
+	this.setPointerClass('fadeInDownBig optional');
+	this.setInnerClass('zoomInDown optional');
 	this.updateLine();
 }
 
@@ -307,7 +308,7 @@ function refreshNodes() {
 		if (! isEmpty(health.loops)) {
 			if (notice.loops == false) {
 				notice.loops = noty({
-					text: 'Invalid: Possible loop, more than 1 pointers to a single node. <span data-tooltip class="has-tip tip-top" title="Tooltips are awesome, you should totally use them!">...</span>',
+					text: 'Invalid: More than 1 pointer to a node. It can cause infinite loops when executing search. Try changing one of the pointers.',
 					type: 'error',
 					timeout: false,
 					closeWith: []
@@ -323,7 +324,7 @@ function refreshNodes() {
 		if (! isEmpty(health.duplicates)) {
 			if (notice.duplicates == false) {
 				notice.duplicates = noty({
-					text: 'Invalid: Duplicate values present. Only the first value will be accessible by functions. Try removing the value.',
+					text: 'Invalid: Duplicate values present. Only the first value will be accessible by functions. Try removing it.',
 					type: 'error',
 					timeout: false,
 					closeWith: []
@@ -339,7 +340,7 @@ function refreshNodes() {
 		if (! isEmpty(health.disconnected)) {
 			if (notice.disconnected == false) {
 				notice.disconnected = noty({
-					text: 'Invalid: Disconnected nodes present. Try reconnecting them back.',
+					text: 'Invalid: Disconnected nodes present. Functions will not be able to access those. Try reconnecting them back.',
 					type: 'error',
 					timeout: false,
 					closeWith: []

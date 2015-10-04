@@ -1,14 +1,15 @@
 /**
- * Contains Foundation styling overrides
+ * UI elements and Foundation style overrides
  */
 
+/* Form */
 input:not([type]), input[type=text], input[type=password], input[type=date], input[type=datetime], input[type=datetime-local], input[type=month], input[type=week], input[type=email], input[type=number], input[type=search], input[type=tel], input[type=time], input[type=url], input[type=color]
 	text-align: center
 	font-family: $family-mono
 	font-weight: 300
 	font-size: 26px
 	line-height: 40px
-	padding:0 10px
+	padding: 0
 	color: #444
 	border: 2px solid #eee
 	letter-spacing: -1px
@@ -31,10 +32,8 @@ select
 
 label
 	line-height: 1.2
+	font-size: 16px
 	margin-bottom: 2px
-
-.switch
-	margin-bottom: 15px
 
 /* Buttons */
 button, .button
@@ -83,6 +82,10 @@ button, .button
 				color: $info-button-bg-hover
 
 
+.progress .meter
+	transition: 1s width ease
+
+
 /*
  * Alerts
  */
@@ -103,17 +106,23 @@ button, .button
  * Options
  */
 #options
+	$padding-h: 15px
+
 	position: absolute
 	top: 0
 	left: 0
 	height: 100%
 	width: 165px
-	padding: 20px
+	padding: 20px $padding-h
 	box-shadow: 0 0 0 3px rgba($dark, 0.1)
 	background: #fff
 	z-index: 20
 	overflow: hidden
 	overflow-y: auto
+
+	hr
+		margin-left: -$padding-h
+		margin-right: -$padding-h
 
 	button, .button
 		width: 100%
@@ -136,6 +145,58 @@ button, .button
 					border-top-left-radius: 0
 					border-bottom-left-radius: 0
 
+	#settings-toggle
+		display: block
+		margin-left: -$padding-h
+		margin-right: -$padding-h
+		padding: 5px $padding-h
+		color: #666
+
+		i
+			float: right
+			padding-top: 6px
+			padding-left: 10px
+
+		&:hover, &:focus
+			text-decoration: none
+			background: rgba($dark, 0.075)
+
+
+	#settings
+		padding-top: 15px
+		animation-duration: 0.3s
+
+		&>label
+			cursor: default
+			margin-top: 6px
+			padding-bottom: 5px
+			border-bottom: 1px solid #eee
+			font-size: 15px
+			letter-spacing: -0.5px
+			font-weight: 300
+			float: left
+
+
+		.switch, select
+			float: right
+
+		.switch
+			margin-bottom: 15px
+
+			input:checked+label:after
+				left: 14px
+
+			label
+				width: 42px
+
+		select
+			border: 0
+			width: 82px
+			height: 32px
+			padding-left: 6px
+			background-color: #eee
+			color: #444
+
 
 /*
  * Code / prism.js
@@ -155,8 +216,7 @@ button, .button
 	font-size: 14px
 	font-weight: 400
 	overflow: hidden
-	overflow-y: auto
-
+	//overflow-y: auto
 	border-radius: 0
 
 	&, code[class*="language-"]
@@ -203,3 +263,24 @@ button, .button
 			padding-left: 15px
 			padding-right: 15px
 			opacity: 0.8
+
+
+
+/* Animate.css Additions */
+.animated
+	&.slow
+		animation-duration: 1.5s
+	&.fast
+		animation-duration: 0.5s
+	&.normal
+		animation-duration: 1s !important
+
+body
+	&.animations-fast
+		#editor
+			.animated.optional
+					animation-duration: 0s
+
+	&.animations-slow
+		#editor .animated
+			animation-duration: 1.5s
