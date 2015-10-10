@@ -26,6 +26,7 @@
 	<script src="js/vendor/foundation.joyride.js"></script>
 	<script src="js/vendor/foundation.tooltip.js"></script>
 	<script src="js/vendor/foundation.dropdown.js"></script>
+	<script src="js/vendor/foundation.slider.js"></script>
 	<script src="js/vendor/jquery.cookie.js"></script>
 
 </head>
@@ -35,7 +36,7 @@
 
 	<!-- Options -->
 	<div id="options" class="animated slideInLeft">
-		<h5>Insert</h5>
+		<h4>Insert</h4>
 		<form id="insert" class="row collapse">
 			<div class="small-6 columns">
 				<input type="number" id="insert-text" value="30" required maxlength="3">
@@ -47,7 +48,7 @@
 
 		<hr>
 
-		<h5>Search</h5>
+		<h4>Search</h4>
 		<form id="search" class="row collapse">
 			<div class="small-6 columns">
 				<input type="number" id="search-text" value="72" required maxlength="3">
@@ -59,7 +60,7 @@
 
 		<hr>
 
-		<h5>Remove</h5>
+		<h4>Remove</h4>
 		<form id="remove" class="row collapse">
 			<div class="small-6 columns">
 				<input type="number" id="remove-text" value="123" required maxlength="3">
@@ -71,7 +72,7 @@
 
 		<hr class="long">
 
-		<h4>Goals (<span id="goals-completed">0</span>/<span id="goals-max">4</span>)</h4>
+		<h3>Goals (<span id="goals-completed">0</span>/<span id="goals-max">4</span>)</h3>
 		<div id="goal">
 			<h6><i class="ion-ios-bell"></i> Task <span id="goal-count">1</span></h6>
 			<p id="goal-text"></p>
@@ -83,9 +84,9 @@
 
 		<hr>
 
-		<a href="#" id="settings-toggle">Settings <i class="ion-ios-arrow-down"></i></a>
+		<h5>Settings</h5>
 
-		<div id="settings" class="hide animated fadeInRight">
+		<div id="settings">
 			<label for="notification-switch">Notifications</label>
 			<div class="switch radius">
 				<input id="notification-switch" type="checkbox" checked>

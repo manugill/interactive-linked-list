@@ -10,7 +10,6 @@ function node(value, x, y) {
 	this.disabled = false;
 	this.dragging = false;
 	this.highlight = false;
-	this.highlightLine = false;
 	this.pointerAt = false;
 	this.pointerOn = false;
 
@@ -29,7 +28,7 @@ function node(value, x, y) {
 	this.group.appendTo(base.nodes);
 
 	this.inner = s.group(def.attrNodeInner);
-	this.inner.p = this; // link group element to object, for drag events
+	this.inner.p = this; // link group element to object
 	this.inner.attr();
 	this.inner.appendTo(this.group);
 
@@ -56,13 +55,23 @@ function node(value, x, y) {
 	this.c1.attr(def.attrCircle);
 	this.c1.appendTo(this.inner);
 
-	// Connected line, not appened to the group
-	this.pointer = s.polyline();
+	// Pointerointer group, contains a background line for grabbing and a visible line over it
+	this.pointer = s.group();
+	this.pointer.p = this; // link group element to object
 	this.pointer.attr(def.attrPointer);
 	this.pointer.attr({
 		id: 'np' + nMax
 	});
 	this.pointer.appendTo(base.pointers);
+
+	// Polylines in the group
+	this.pointerVisible = s.polyline();
+	this.pointerVisible.attr(def.attrPointerVisible);
+	this.pointerVisible.appendTo(this.pointer);
+
+	this.pointerInvisible = s.polyline();
+	this.pointerInvisible.attr(def.attrPointerInvisible);
+	this.pointerInvisible.appendTo(this.pointer);
 
 	/* Functions */
 	// Select group element by id for updates (objects die)
@@ -163,24 +172,64 @@ function node(value, x, y) {
 
 		// Don't animate change or do
 		if (time === undefined) {
-			node.pointer.attr({
+			node.pointerVisible.attr({
+				points: points
+			});
+			node.pointerInvisible.attr({
 				points: points
 			});
 		} else {
 			// Get current location
-			var pointsCurrent = node.pointer.attr().points;
+			var pointsCurrent = node.pointerVisible.attr().points;
 			if (pointsCurrent !== undefined)
 				pointsCurrent = pointsCurrent.split(','); // to array
 			else
 				pointsCurrent = points;
 
 			Snap.animate(pointsCurrent, points, function (val) {
-				node.pointer.attr({
+				node.pointerVisible.attr({
 					points: val
 				});
 			}, time, mina.easeinout, callback);
 		}
 
+	};
+
+	this.pointerDragMove = function (mouseLoc) {
+		var currentNode = this;
+		this.pointerAt = mouseLoc;
+		if (this.pointerOn)
+			this.pointerOn.highlight = false;
+
+		this.pointerOn = false;
+		this.highlight = false;
+
+		n.forEach(function (node) {
+			if (node != currentNode && isPointOnRect(mouseLoc, node.loc())) {
+				currentNode.pointerOn = node;
+				currentNode.pointerOn.highlight = true;
+			}
+		});
+	}
+
+	this.pointerDragEnd = function () {
+		if (this.pointerOn) {
+			this.pointerOn.highlight = false;
+			this.connect(this.pointerOn);
+		} else if (this.pointerAt) {
+			this.next = undefined;
+		}
+
+		this.pointerAt = false;
+		this.pointerOn = false;
+
+		// Animate line after drag right end
+		if (this.dragging != 'left') {
+			this.updateLine(speed.updateLine, function () {
+				refreshNodes();
+			});
+			this.dragging = false;
+		}
 	};
 
 
@@ -218,19 +267,7 @@ function node(value, x, y) {
 				});
 
 		} else {
-			current.pointerAt = mouseLoc;
-			if (current.pointerOn)
-				current.pointerOn.highlight = false;
-
-			current.pointerOn = false;
-			current.highlight = false;
-
-			n.forEach(function (node) {
-				if (node != current && isPointOnRect(mouseLoc, node.loc())) {
-					current.pointerOn = node;
-					current.pointerOn.highlight = true;
-				}
-			});
+			current.pointerDragMove(mouseLoc);
 		}
 
 		refreshNodes();
@@ -244,27 +281,31 @@ function node(value, x, y) {
 		// Drag end
 		var current = this.p;
 
-		if (current.pointerOn) {
-			current.pointerOn.highlight = false;
-			current.connect(current.pointerOn);
-		} else if (current.pointerAt) {
-			current.next = undefined;
-		}
-
-		current.pointerAt = false;
-		current.pointerOn = false;
+		current.pointerDragEnd();
 
 		if ( current.dragging == 'left') {
 			current.dragging = false;
 			refreshNodes();
-		} else {
-			// Animate line after drag right end
-			current.updateLine(speed.updateLine, function () {
-				refreshNodes();
-			});
-			current.dragging = false;
 		}
 
+	});
+
+	this.pointer.drag(function (dx, dy, posX, posY, e) {
+		// Drag move
+		var current = this.p; // get parent node of the group
+
+		var mouseLoc = {x: posX - offset.left, y: posY - offset.top};
+
+		current.pointerDragMove(mouseLoc);
+
+		refreshNodes();
+
+	}, function () {
+		// Drag start
+	}, function () {
+		// Drag end
+		var current = this.p;
+		current.pointerDragEnd();
 	});
 
 
@@ -282,7 +323,6 @@ function node(value, x, y) {
  */
 function refreshNodes() {
 	var occurredNext = [];
-	var occurredValue = [];
 
 	// refresh head and its pointer
 	head.refresh();
@@ -290,26 +330,22 @@ function refreshNodes() {
 		occurredNext.push(head.next);
 
 	n.forEach(function(node) {
-		// refresh node and its pointer
 		node.refresh();
 
-		occurredValue.push(node.value);
-
-		if (node.next)
+		if ( node.next )
 			occurredNext.push(node.next);
 	});
 
 	/* Health checks */
 	if ( ! busy ) {
-		health.loops = getDuplicates(occurredNext);
-		health.duplicates = getDuplicates(occurredValue);
+		health.loops = isNodeLoop();
 		health.disconnected = getDifferences(n, occurredNext);
 
 		if (! isEmpty(health.loops)) {
 			if (notice.loops == false) {
 				notice.loops = noty({
 					text: 'Invalid: More than 1 pointer to a node. It can cause infinite loops when executing search. Try changing one of the pointers.',
-					type: 'error',
+					type: 'warning',
 					timeout: false,
 					closeWith: []
 				});
@@ -321,27 +357,11 @@ function refreshNodes() {
 			}
 		}
 
-		if (! isEmpty(health.duplicates)) {
-			if (notice.duplicates == false) {
-				notice.duplicates = noty({
-					text: 'Invalid: Duplicate values present. Only the first value will be accessible by functions. Try removing it.',
-					type: 'error',
-					timeout: false,
-					closeWith: []
-				});
-			}
-		} else {
-			if (notice.duplicates) {
-				notice.duplicates.close();
-				notice.duplicates = false;
-			}
-		}
-
 		if (! isEmpty(health.disconnected)) {
 			if (notice.disconnected == false) {
 				notice.disconnected = noty({
-					text: 'Invalid: Disconnected nodes present. Functions will not be able to access those. Try reconnecting them back.',
-					type: 'error',
+					text: 'Invalid: Disconnected nodes present. <i class="ion-help-circled expand"></i><span class="info animated bounceIn">Those nodes will not be accessible by functions. Try reconnecting them back.</a></span>',
+					type: 'warning',
 					timeout: false,
 					closeWith: []
 				});

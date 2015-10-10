@@ -151,6 +151,7 @@ function nextNodeLoc() {
 	// Initial location
 	var x = 40 + bound.left;
 	var y = 80 + bound.top;
+	var origY = y;
 
 	while (! found) {
 		matrix = new Snap.Matrix();
@@ -175,12 +176,13 @@ function nextNodeLoc() {
 
 		if (collision == true) {
 			x += 20;
-			y += 2;
+			y += 1;
 
 			// Go to next line if we've reached a bound
 			if (nextLoc.end.x > offset.limitRight + 20) {
 				x = 150 + bound.left;
-				y -= 4;
+				y = origY + 10;
+				origY = y;
 			}
 
 			// No more area left to explore
@@ -234,12 +236,30 @@ function getDifferences(list1, list2) {
 
 
 // Get node values
+function isNodeLoop() {
+	var nodes = [];
+	var current = head;
+
+	while (current.next) {
+		nodes.push(current.next);
+		current = current.next;
+
+		if (! isEmpty(getDuplicates(nodes)))
+			return [current];
+	}
+
+	return [];
+}
+
+
+
+// Get node values
 function getNodeValues() {
 	var values = [];
 
 	n.forEach(function (node) {
 		values.push(node.value);
-	})
+	});
 
 	return values;
 }

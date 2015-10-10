@@ -8,12 +8,12 @@ input:not([type]), input[type=text], input[type=password], input[type=date], inp
 	font-family: $family-mono
 	font-weight: 300
 	font-size: 26px
-	line-height: 40px
+	line-height: 30px
 	padding: 0
 	color: #444
 	border: 2px solid #eee
 	letter-spacing: -1px
-	height: 60px
+	height: 54px
 	text-shadow: none
 	margin-bottom: 0
 	border-radius: $radius
@@ -96,7 +96,30 @@ button, .button
 	font-size: 14px
 	line-height: 1.4
 
+	&.warning, &.error
+		a
+			color: #fff
+
+	.expand
+		float: right
+		display: inline-block
+		transform: scale(1.5)
+		padding-top: 3px
+
+	.info
+		display: none
+
+	&:focus
+		.info
+			display: block
+
+		.expand
+			opacity: 0
+
 .alert-list
+	&>li:not(.i-am-closing-now)
+		height: auto !important
+
 	.alert-box
 		margin-bottom: 0
 		margin-top: 1px
@@ -113,7 +136,7 @@ button, .button
 	left: 0
 	height: 100%
 	width: 165px
-	padding: 20px $padding-h
+	padding: 15px $padding-h
 	box-shadow: 0 0 0 3px rgba($dark, 0.1)
 	background: #fff
 	z-index: 20
@@ -128,8 +151,8 @@ button, .button
 		width: 100%
 		padding: 0 10px
 		border-width: 2px
-		line-height: 58px
-		height: 60px
+		line-height: 52px
+		height: 54px
 		font-size: 30px
 		margin-bottom: 0
 
@@ -145,25 +168,9 @@ button, .button
 					border-top-left-radius: 0
 					border-bottom-left-radius: 0
 
-	#settings-toggle
-		display: block
-		margin-left: -$padding-h
-		margin-right: -$padding-h
-		padding: 5px $padding-h
-		color: #666
-
-		i
-			float: right
-			padding-top: 6px
-			padding-left: 10px
-
-		&:hover, &:focus
-			text-decoration: none
-			background: rgba($dark, 0.075)
-
 
 	#settings
-		padding-top: 15px
+		padding-top: 1px
 		animation-duration: 0.3s
 
 		&>label
@@ -206,17 +213,17 @@ button, .button
 	top: 0
 	right: 0
 	height: 100%
-	width: 420px
-	z-index: 4
+	width: 435px
+	z-index: 15
 	display: block
 	margin: 0
-	padding: 15px 15px
+	padding: 15px 25px
 	background: rgba($dark, 0.5)
 	box-shadow: 0 0 0 3px rgba($dark, 0.7)
 	font-size: 14px
 	font-weight: 400
 	overflow: hidden
-	//overflow-y: auto
+	overflow-y: auto
 	border-radius: 0
 
 	&, code[class*="language-"]

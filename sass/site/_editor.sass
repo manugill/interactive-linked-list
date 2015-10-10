@@ -10,6 +10,12 @@
 	height: 100%
 	fill: $light
 
+	-moz-user-select: none
+	-khtml-user-select: none
+	-webkit-user-select: none
+	-ms-user-select: none
+	user-select: none
+
 	g
 		&.node
 			cursor: pointer
@@ -59,7 +65,7 @@
 					fill: $light
 
 			&.highlight
-				filter: url('index.html#highlight')
+				//filter: url('index.html#highlight')
 				shape-rendering: geometricPrecision
 
 				rect
@@ -95,6 +101,10 @@
 		&.pointer
 			stroke-width: 1px
 			marker-end: url('index.html#triangle')
+
+		&.pointer-invisible
+			stroke-width: 16px
+			stroke: rgba($light, 0)
 
 	polyline
 		fill: none

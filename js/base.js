@@ -12,7 +12,6 @@ health.disconnected = [];
 
 var notice = {};
 notice.loops = false;
-notice.duplicates = false;
 notice.disconnected = false;
 notice.noSpace = false;
 
@@ -43,7 +42,13 @@ def.attrCircle = {
 	class: 'circle'
 };
 def.attrPointer = {
-	class: 'pointer animated'
+	class: 'animated'
+};
+def.attrPointerVisible = {
+	class: 'pointer'
+};
+def.attrPointerInvisible = {
+	class: 'pointer-invisible'
 };
 
 
@@ -80,8 +85,7 @@ function calculateSizes() {
 	bound.top = 0;
 	bound.left = $options.outerWidth();
 	bound.bottom = 40;
-	bound.right = 0;
-	//bound.right = $code.outerWidth();
+	bound.right = $code.outerWidth();
 
 	offset.top = $editor.offset().top;
 	offset.left = $editor.offset().left;
