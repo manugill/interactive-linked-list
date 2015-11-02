@@ -2,11 +2,12 @@
  * Goals
  */
 
-var $goalsMax = $('#goals-max');
-var $goalsCompleted = $('#goals-completed');
-var $goalCount = $('#goal-count');
-var $goalText = $('#goal-text');
-var $goalMeter = $('#goal-meter');
+var $goalsMax = $('#goals .max');
+var $goalsHeading = $('#goals .heading');
+var $goalsCompleted = $('#goals .completed');
+var $goalCount = $('#goal .count');
+var $goalText = $('#goal .text');
+var $goalMeter = $('#goal .meter');
 
 var goalPrev = {};
 var goal = {};
@@ -38,7 +39,7 @@ function generateGoal() {
 	} else if ( action == 2 ) {
 		goal.type = 'remove';
 		goal.value = value;
-		goal.text = 'Remove ' + goal.value + ' from the linked list.';
+		goal.text = 'Remove node with value ' + goal.value + ' from the linked list.';
 	} else {
 		goal.type = 'insert';
 		goal.value = randomInt(1, 999);
@@ -60,6 +61,11 @@ function checkGoal(type, value) {
 
 		if ( percent <= 101 )
 			$goalMeter.css('width', percent + '%');
+
+		$goalsHeading.addClass('jello');
+		setTimeout(function () {
+			$goalsHeading.removeClass('jello');
+		}, 1000);
 
 		generateGoal();
 	}

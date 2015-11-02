@@ -68,6 +68,7 @@ base.pointers = s.group({
 
 
 /* UI elements */
+var $header = $('#header');
 var $options = $('#options');
 var $code = $('#code');
 var codeEl = $('#code code')[0];
@@ -82,10 +83,10 @@ function calculateSizes() {
 	var screenWidth = $(window).width();
 	var screenHeight = $(window).height();
 
-	bound.top = 0;
-	bound.left = $options.outerWidth();
+	bound.top = $header.outerHeight() + 3;
+	bound.left = $options.outerWidth() + 5;
 	bound.bottom = 40;
-	bound.right = $code.outerWidth();
+	bound.right = $code.outerWidth() + 5;
 
 	offset.top = $editor.offset().top;
 	offset.left = $editor.offset().left;
@@ -143,4 +144,4 @@ $(document).foundation({
 		tip_animation_fade_speed : 200
 	}
 });
-$(document).foundation('joyride', 'start');
+//$(document).foundation('joyride', 'start');

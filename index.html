@@ -34,77 +34,83 @@
 
 <div class="wrapper">
 
+	<div id="header">
+		<img src="img/logo.svg" id="logo">
+
+		<ul id="menu">
+			<li>
+				<label for="notification-switch">Notifications</label>
+				<div class="switch radius small">
+					<input id="notification-switch" type="checkbox" checked>
+					<label for="notification-switch"></label>
+				</div>
+			</li>
+
+			<li>
+				<label for="speed">Speed</label>
+				<div class="range-slider radius" data-slider data-options="start: 1; end: 3; step: 1;">
+					<span class="range-slider-handle" role="slider" tabindex="0"></span>
+					<span class="range-slider-active-segment"></span>
+					<input id="speed-value" type="hidden">
+				</div>
+			</li>
+		</ul>
+	</div>
+
 	<!-- Options -->
-	<div id="options" class="animated slideInLeft">
-		<h4>Insert</h4>
-		<form id="insert" class="row collapse">
-			<div class="small-6 columns">
-				<input type="number" id="insert-text" value="30" required maxlength="3">
-			</div>
-			<div class="small-6 columns">
-				<button type="submit" class="success hollow"><i class="ion-ios-plus"></i></button>
-			</div>
-		</form>
+	<div class="header-spacer">
+		<div id="options" class="animated slideInLeft">
+			<h4>Insert</h4>
+			<form id="insert" class="row collapse">
+				<div class="small-6 columns">
+					<input type="number" id="insert-text" value="30" required maxlength="3">
+				</div>
+				<div class="small-6 columns">
+					<button type="submit" class="success hollow"><i class="ion-ios-plus"></i></button>
+				</div>
+			</form>
 
-		<hr>
+			<hr>
 
-		<h4>Search</h4>
-		<form id="search" class="row collapse">
-			<div class="small-6 columns">
-				<input type="number" id="search-text" value="72" required maxlength="3">
+			<h4>Search</h4>
+			<form id="search" class="row collapse">
+				<div class="small-6 columns">
+					<input type="number" id="search-text" value="72" required maxlength="3">
+				</div>
+				<div class="small-6 columns">
+					<button type="submit" class="success hollow"><i class="ion-ios-search-strong"></i></button>
+				</div>
+			</form>
+
+			<hr>
+
+			<h4>Remove <small>by index</small></h4>
+			<form id="remove" class="row collapse">
+				<div class="small-6 columns">
+					<input type="number" id="remove-text" value="4" required maxlength="3">
+				</div>
+				<div class="small-6 columns">
+					<button type="submit" class="success hollow"><i class="ion-ios-close"></i></button>
+				</div>
+			</form>
+
+			<hr class="long">
+
+			<div id="goals">
+				<h3 class="heading animated">Goals (<span class="completed">0</span>/<span class="max">4</span>)</h3>
+				<div id="goal">
+					<h6><i class="ion-ios-bell"></i> Task <span class="count">1</span></h6>
+					<p class="text"></p>
+				</div>
+
+				<div class="progress">
+					<span class="meter success" style="width: 2%"></span>
+				</div>
 			</div>
-			<div class="small-6 columns">
-				<button type="submit" class="success hollow"><i class="ion-ios-search-strong"></i></button>
-			</div>
-		</form>
 
-		<hr>
+			<hr>
 
-		<h4>Remove</h4>
-		<form id="remove" class="row collapse">
-			<div class="small-6 columns">
-				<input type="number" id="remove-text" value="123" required maxlength="3">
-			</div>
-			<div class="small-6 columns">
-				<button type="submit" class="success hollow"><i class="ion-ios-close"></i></button>
-			</div>
-		</form>
-
-		<hr class="long">
-
-		<h3>Goals (<span id="goals-completed">0</span>/<span id="goals-max">4</span>)</h3>
-		<div id="goal">
-			<h6><i class="ion-ios-bell"></i> Task <span id="goal-count">1</span></h6>
-			<p id="goal-text"></p>
 		</div>
-
-		<div class="progress">
-			<span id="goal-meter" class="meter success" style="width: 2%"></span>
-		</div>
-
-		<hr>
-
-		<h5>Settings</h5>
-
-		<div id="settings">
-			<label for="notification-switch">Notifications</label>
-			<div class="switch radius">
-				<input id="notification-switch" type="checkbox" checked>
-				<label for="notification-switch"></label>
-			</div>
-
-			<div class="clear"></div>
-
-			<label for="speed">Speed</label>
-			<select id="speed" class="radius">
-				<option value="slow">Slow</option>
-				<option value="normal" selected>Normal</option>
-				<option value="fast">Fast</option>
-			</select>
-
-			<div class="clear"></div>
-		</div>
-
 	</div>
 
 	<!-- Editor -->
@@ -142,57 +148,67 @@
 	</svg>
 
 	<!-- Code -->
-	<pre id="code" class="language-python animated slideInRight"><code>class Node(object):
+	<div class="header-spacer right">
+		<pre id="code" class="language-python animated slideInRight"><code>class Node(object):
     def __init__(self, data=None, next=None):
         self.data = data
         self.next = next
-
 
 class LinkedList(object):
     def __init__(self, head=None):
         self.head = head
 
-    def insert(self, data):
-        new_node = Node(data)
+    def insert(self, value):
+        new_node = Node(value)
         new_node.next(self.head)
         self.head = new_node
 
-    def search(self, data):
+    def search(self, value):
         current = self.head
         previous = None
+        index = 0
         found = False
 
+        # Search by value
         while current and found is False:
-            if current.data == data:
+            if current.value == value:
                 found = True
             else:
                 previous = current
                 current = current.next
+                index += 1
 
-        if current is None:
-            return False
-        else:
+        if current is not None:
             return {
-                'c': current,
-                'p': previous
+                'current': current,
+                'previous': previous,
+                'index': index
             }
+        else:
+            print("Value not found in list")
 
-    def delete(self, data):
-        found = self.search(data)
+    def delete(self, index):
+        current = self.head
+        previous = None
+        index = 0
+        found = False
+
+        # Search by index
+        while current and found is False:
+            if current.index == index:
+                found = True
+            else:
+                previous = current
+                current = current.next
+                index += 1
 
         if found:
-            found['p'].next = found['c'].next
+            previous.next = current.next
+        else:
+            print("Index not found in list")
 
-    def size(self):
-        current = self.head
-        count = 0
-
-        while current:
-            count += 1
-            current = current.get_next()
-
-        return count
 </code></pre>
+	</div>
 
 	<div class="joyride-tips">
 		<div id="jr1"></div>
@@ -226,7 +242,7 @@ class LinkedList(object):
 	</ol>
 
 	<!-- Fullscreen alert -->
-	<div class="fullscreen-alert animated fadeInUp">Please switch to fullscreen or open the page on a larger screen for a better experience.</div>
+	<div class="fullscreen-alert animated fadeInDown">Please switch to fullscreen or open the page on a larger screen for a better experience.</div>
 
 </div>
 

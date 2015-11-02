@@ -5,7 +5,7 @@
 busy = true;
 
 // Create head
-var head = new node('', 60 + bound.left, 80);
+var head = new node('', bound.left + 60, bound.top + 120);
 head.group.attr({
 	id: 'head'
 });
@@ -14,22 +14,22 @@ head.group.attr({
 var chain = new TimeoutChain();
 
 chain.add(200, function () {
-	n[0] = new node(40, 120 + bound.left, 230);
+	n[0] = new node(40, bound.left + 120, bound.top + 270);
 	head.connect(n[0]);
 	head.updateLine();
 });
 chain.add(200, function () {
-	n[1] = new node(16, 300 + bound.left, 230);
+	n[1] = new node(16, bound.left + 300, bound.top + 270);
 	n[0].connect(n[1]);
 	n[0].updateLine();
 });
 chain.add(200, function () {
-	n[2] = new node(55, 150 + bound.left, 380);
+	n[2] = new node(55, bound.left + 150, bound.top + 420);
 	n[1].connect(n[2]);
 	n[1].updateLine();
 });
 chain.add(200, function () {
-	n[3] = new node(72, 330 + bound.left, 380);
+	n[3] = new node(72, bound.left + 330, bound.top + 420);
 	n[2].connect(n[3]);
 	n[2].updateLine();
 
@@ -119,7 +119,7 @@ $('#search').submit(function (e) {
 	busy = true; // Disable controls
 
 	var value = parseInt($('#search-text').val());
-	searchNode(value);
+	searchValue(value);
 });
 
 
@@ -130,20 +130,89 @@ $('#remove').submit(function (e) {
 		return false;
 	busy = true; // Disable controls
 
-	var value = parseInt($('#remove-text').val());
+	var index = parseInt($('#remove-text').val());
 
 	notification("Executing delete...");
 	highlightCode('36-37');
 
 	setTimeout(function () {
-		searchNode(value, deleteNode, ',36-37');
+		searchIndex(index, deleteNode, ',36-37');
 	}, speed.normal);
 
 });
 
 
 /* Search function */
-function searchNode(searchVal, action, codeRange) {
+function searchValue(searchVal, action, codeRange) {
+	if (codeRange === undefined)
+		codeRange = '';
+
+	// Point to head and highlight
+	var current = head;
+	var nodePrev = false;
+	current.highlight = true;
+	refreshNodes();
+
+	notification("Starting search from head...");
+	highlightCode('16-19' + codeRange);
+
+	var searching = setInterval(function () {
+		current.highlight = false;
+
+		if ( current.next ) {
+			nodePrev = current;
+			current = current.next;
+
+			current.highlight = true;
+			refreshNodes();
+
+			highlightCode('16,21' + codeRange);
+
+			setTimeout(function () {
+				// Found the value
+				if ( current.value == searchVal ) {
+					current.highlight = false;
+
+					highlightCode('16,21-23' + codeRange);
+
+					setTimeout(function () {
+						current.setInnerClass('tada');
+
+						notification("Node found!", 'success');
+						highlightCode('16,30-34' + codeRange);
+
+						if ( action ) {
+							action(current, nodePrev);
+						} else {
+							busy = false; // Enable controls
+							checkGoal('search', searchVal);
+						}
+					}, speed.normal);
+
+					clearInterval(searching);
+				} else {
+					highlightCode('16,21,24-26' + codeRange);
+				}
+
+			}, speed.short);
+
+		} else {
+			notification("Data not found, linked list exhausted.", 'error');
+			highlightCode('16,28-29');
+
+			refreshNodes();
+
+			current.setInnerClass('wobble');
+
+			busy = false;
+			clearInterval(searching);
+		}
+
+	}, speed.normal);
+};
+
+
+function searchIndex(index, action, codeRange) {
 	if (codeRange === undefined)
 		codeRange = '';
 
