@@ -11,13 +11,16 @@ input:not([type]), input[type=text], input[type=password], input[type=date], inp
 	line-height: 30px
 	padding: 0
 	color: #444
-	border: 2px solid #eee
+	border: 1px solid #ccc
 	letter-spacing: -1px
 	height: 54px
 	text-shadow: none
 	margin-bottom: 0
 	border-radius: $radius
 	box-shadow: none
+
+	&[data-invalid]
+		background: #ffb7b7
 
 input[type=number]
 	-moz-appearance: textfield
@@ -42,9 +45,11 @@ button, .button
 	border-radius: $radius
 	transition: $transition
 	outline: none
+	background: $tertiary
+	border-color: $secondary
 
 	&.hollow
-		background: none !important
+		background: #fff !important
 		border-color: rgba($button-border-color, 0.5)
 		color: $button-bg-color
 		&:hover
@@ -109,12 +114,12 @@ button, .button
 	.info
 		display: none
 
-	&:focus
+	&:hover, &:focus
 		.info
 			display: block
 
 		.expand
-			opacity: 0
+			opacity: 0.4
 
 .alert-list
 	&>li:not(.i-am-closing-now)
@@ -144,3 +149,56 @@ body
 	&.animations-slow
 		#editor .animated
 			animation-duration: 1.5s
+
+
+
+/*
+ * Joyride
+ */
+.joyride-tip-guide
+	background: $light
+	color: $dark
+	border-radius: 3px
+
+	h1, h2, h3, h4, h5, h6
+		color: inherit
+		margin-bottom: 10px
+
+	h4
+		font-size: 20px
+		font-weight: 500
+		color: $secondary
+
+	p
+		margin-bottom: 16px
+
+	.joyride-content-wrapper
+		padding: 20px
+
+	.button.small
+		padding: 10px 35px
+		line-height: 20px
+		vertical-align: top
+		background: #fff
+		border: 1px solid rgba($dark, 0.6)
+		color: $dark
+		font-size: 16px
+		text-transform: uppercase
+
+		&:hover
+			background: rgba($dark, 0.075)
+
+		&.joyride-prev-tip
+			padding-left: 15px
+			padding-right: 15px
+			opacity: 0.8
+
+	.joyride-nub
+		&.left
+			border-right-color: #fff !important
+		&.right
+			border-left-color: #fff !important
+		&.top
+			border-bottom-color: #fff !important
+		&.bottom
+			border-top-color: #fff !important

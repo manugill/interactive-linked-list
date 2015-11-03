@@ -691,14 +691,13 @@ function highlightLines(pre, lines, classes) {
 		var start = +range[0],
 			end = +range[1] || start;
 
-		var line = document.createElement('div');
+		var line = $('<div></div>');
 
-		line.textContent = Array(end - start + 2).join(' \n');
-		line.className = (classes || '') + ' line-highlight';
+		line.html(Array(end - start + 2).join(' \n'));
+		line.addClass((classes || '') + ' line-highlight');
+		line.css('top', (start - offset - 1) * lineHeight + 'px');
 
-		line.style.top = (start - offset - 1) * lineHeight + 'px';
-
-		(pre.querySelector('code') || pre).appendChild(line);
+		$(pre).append(line);
 	}
 }
 

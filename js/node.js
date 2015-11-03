@@ -341,26 +341,10 @@ function refreshNodes() {
 		health.loops = isNodeLoop();
 		health.disconnected = getDifferences(n, occurredNext);
 
-		if (! isEmpty(health.loops)) {
-			if (notice.loops == false) {
-				notice.loops = noty({
-					text: 'Invalid: More than 1 pointer to a node. It can cause infinite loops when executing search. Try changing one of the pointers.',
-					type: 'warning',
-					timeout: false,
-					closeWith: []
-				});
-			}
-		} else {
-			if (notice.loops) {
-				notice.loops.close();
-				notice.loops = false;
-			}
-		}
-
-		if (! isEmpty(health.disconnected)) {
+		if (! isEmpty(health.disconnected) && isEmpty(health.loops)) {
 			if (notice.disconnected == false) {
 				notice.disconnected = noty({
-					text: 'Invalid: Disconnected nodes present. <i class="ion-help-circled expand"></i><span class="info animated bounceIn">Those nodes will not be accessible by functions. Try reconnecting them back.</a></span>',
+					text: 'Invalid: Disconnected nodes present. <i class="ion-help-circled expand"></i><span class="info animated fadeIn">Those nodes will not be accessible by functions. Try reconnecting them back.</a></span>',
 					type: 'warning',
 					timeout: false,
 					closeWith: []
@@ -370,6 +354,27 @@ function refreshNodes() {
 			if (notice.disconnected) {
 				notice.disconnected.close();
 				notice.disconnected = false;
+			}
+		}
+
+		if (! isEmpty(health.loops)) {
+			if (notice.disconnected) {
+				notice.disconnected.close();
+				notice.disconnected = false;
+			}
+
+			if (notice.loops == false) {
+				notice.loops = noty({
+					text: 'Invalid: More than 1 pointer to a node.<i class="ion-help-circled expand"></i><span class="info animated fadeIn">It can cause infinite loops when executing search. Try changing one of the pointers.</a></span>',
+					type: 'warning',
+					timeout: false,
+					closeWith: []
+				});
+			}
+		} else {
+			if (notice.loops) {
+				notice.loops.close();
+				notice.loops = false;
 			}
 		}
 

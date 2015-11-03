@@ -83,7 +83,7 @@
 /*
  * Options
  */
-$options-width: 300px
+$options-width: 240px
 
 #options
 	$padding-h: 20px
@@ -93,12 +93,19 @@ $options-width: 300px
 	left: 0
 	height: 100%
 	width: $options-width
-
-	padding: 15px $padding-h
-	background: #fff
+	background: #e5faff
 	z-index: 20
 	overflow: hidden
 	overflow-y: auto
+
+	.box
+		padding: 25px $padding-h 40px
+
+		&.alt
+			background: #fff
+
+		&>*:first-child
+			margin-top: 0
 
 	hr
 		margin-left: -$padding-h
@@ -107,13 +114,16 @@ $options-width: 300px
 	button, .button
 		width: 100%
 		padding: 0 10px
-		border-width: 2px
+		border-width: 1px
 		line-height: 52px
 		height: 54px
 		font-size: 30px
 		margin-bottom: 0
 
 	form.row.collapse
+		max-width: 160px
+		margin: 0
+
 		.columns
 			&:not(:last-child)
 				&>*
@@ -124,6 +134,17 @@ $options-width: 300px
 				&>*
 					border-top-left-radius: 0
 					border-bottom-left-radius: 0
+
+	.heading
+		margin-top: 0
+		margin-bottom: 35px
+
+	.separator
+		margin: 0
+		padding: 10px $padding-h
+		background: $secondary
+		color: #fff
+
 
 /*
  * Code / prism.js
@@ -137,7 +158,7 @@ $options-width: 300px
 	z-index: 15
 	display: block
 	margin: 0
-	padding: 22px 25px
+	padding-left: 25px
 	background: rgba($dark, 0.5)
 	font-size: 14px
 	font-weight: 400
@@ -154,39 +175,3 @@ $options-width: 300px
 
 		&:before
 			display: none
-
-
-/*
- * Joyride
- */
-.joyride-tip-guide
-	background: #333
-	box-shadow: 0 0 0 3px rgba($light, 0.1)
-	border-radius: 3px
-
-	h1, h2, h3, h4, h5, h6
-		color: inherit
-		margin-bottom: 10px
-
-	p
-		margin-bottom: 16px
-
-	.joyride-content-wrapper
-		padding: 20px
-
-	.button.small
-		padding: 10px 35px
-		line-height: 20px
-		vertical-align: top
-		background: rgba($light, 0.075)
-		border: 2px solid rgba($light, 0.8)
-		font-size: 16px
-		text-transform: uppercase
-
-		&:hover
-			background: rgba($light, 0.25)
-
-		&.joyride-prev-tip
-			padding-left: 15px
-			padding-right: 15px
-			opacity: 0.8

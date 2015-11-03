@@ -5,7 +5,7 @@
 busy = true;
 
 // Create head
-var head = new node('', bound.left + 60, bound.top + 120);
+var head = new node('', bound.left + 50, bound.top + 70);
 head.group.attr({
 	id: 'head'
 });
@@ -14,22 +14,22 @@ head.group.attr({
 var chain = new TimeoutChain();
 
 chain.add(200, function () {
-	n[0] = new node(40, bound.left + 120, bound.top + 270);
+	n[0] = new node(40, bound.left + 130, bound.top + 180);
 	head.connect(n[0]);
 	head.updateLine();
 });
 chain.add(200, function () {
-	n[1] = new node(16, bound.left + 300, bound.top + 270);
+	n[1] = new node(16, bound.left + 160, bound.top + 290);
 	n[0].connect(n[1]);
 	n[0].updateLine();
 });
 chain.add(200, function () {
-	n[2] = new node(55, bound.left + 150, bound.top + 420);
+	n[2] = new node(55, bound.left + 190, bound.top + 400);
 	n[1].connect(n[2]);
 	n[1].updateLine();
 });
 chain.add(200, function () {
-	n[3] = new node(72, bound.left + 330, bound.top + 420);
+	n[3] = new node(72, bound.left + 220, bound.top + 510);
 	n[2].connect(n[3]);
 	n[2].updateLine();
 
@@ -42,27 +42,23 @@ chain.start();
 
 
 /* Insert event */
-$('#insert').submit(function (e) {
-	e.preventDefault();
+$('#insert').on('valid.fndtn.abide', function(e) {
 	if (busy)
 		return false;
 	busy = true; // Disable controls
 
 	var text = $('#insert-text');
 	var val = parseInt(text.val());
-	var x = e.clientX - def.nodeWidth/2;
-	var y = e.clientY - def.nodeHeight/2;
 	var index = n.length;
 
 	var loc = nextNodeLoc();
 
 	if (loc) { // An empty location found
-		text.val(randomInt(1, 999));
-
 		n[index] = new node(val, loc.x, loc.y);
 
+		text.val(randomInt(1, 999));
 		notification("Created a new node.");
-		highlightCode('11,12');
+		highlightCode('10,11');
 
 		// Delayed executed steps
 		var chain = new TimeoutChain();
@@ -72,39 +68,34 @@ $('#insert').submit(function (e) {
 			n[index].updateLine(500);
 
 			notification("Set node's pointer to head.");
-			highlightCode('11,13');
+			highlightCode('10,12');
 		});
 		chain.add(speed.normal, function () {
 			head.connect(n[index]);
 			head.updateLine(500);
 
 			notification("Set head pointer to the new node.");
-			highlightCode('11,14');
+			highlightCode('10,13');
 		});
 		chain.add(speed.normal, function () {
-			n[index].highlight = true;
-
 			notification("Node successfully inserted.", 'success');
-
-			busy = false; // Enable controls
-
+			n[index].highlight = true;
 			refreshNodes();
 			n[index].highlight = false;
 
+			busy = false; // Enable controls
 			checkGoal('insert', n[index].value);
 		});
 		chain.start();
 
 	} else { // No location found
-		if ( notice.noSpace ) {
-			notice.noSpace.close();
-			notice.noSpace = false;
+		if (! notice.noSpace || notice.noSpace.showing == false) {
+			$.noty.clearQueue();
+			notice.noSpace = noty({
+				text: "No more area on screen left to add nodes. Try moving some nodes around to create space",
+				type: 'warning'
+			});
 		}
-		$.noty.clearQueue();
-		notice.noSpace = noty({
-			text: "No more area on screen left to add nodes. Try moving some nodes around to create space",
-			type: 'warning'
-		});
 
 		busy = false;
 	}
@@ -112,8 +103,7 @@ $('#insert').submit(function (e) {
 
 
 /* Search event */
-$('#search').submit(function (e) {
-	e.preventDefault();
+$('#search').on('valid.fndtn.abide', function(e) {
 	if (busy)
 		return false;
 	busy = true; // Disable controls
@@ -124,157 +114,137 @@ $('#search').submit(function (e) {
 
 
 /* Remove event */
-$('#remove').submit(function (e) {
-	e.preventDefault();
+$('#remove').on('valid.fndtn.abide', function(e) {
 	if (busy)
 		return false;
 	busy = true; // Disable controls
 
 	var index = parseInt($('#remove-text').val());
-
-	notification("Executing delete...");
-	highlightCode('36-37');
-
-	setTimeout(function () {
-		searchIndex(index, deleteNode, ',36-37');
-	}, speed.normal);
-
+	searchIndexAndDelete(index);
 });
 
 
 /* Search function */
-function searchValue(searchVal, action, codeRange) {
+function searchValue(searchVal, codeRange) {
 	if (codeRange === undefined)
 		codeRange = '';
 
 	// Point to head and highlight
-	var current = head;
+	var index = -1;
 	var nodePrev = false;
+	var current = head;
 	current.highlight = true;
 	refreshNodes();
 
-	notification("Starting search from head...");
-	highlightCode('16-19' + codeRange);
+	notification("Searching for node with value " + searchVal + "...");
+	highlightCode('15-19' + codeRange);
 
 	var searching = setInterval(function () {
 		current.highlight = false;
 
 		if ( current.next ) {
+			index++;
 			nodePrev = current;
 			current = current.next;
 
 			current.highlight = true;
 			refreshNodes();
 
-			highlightCode('16,21' + codeRange);
+			highlightCode('15,22' + codeRange);
 
 			setTimeout(function () {
 				// Found the value
 				if ( current.value == searchVal ) {
+					clearInterval(searching);
 					current.highlight = false;
 
-					highlightCode('16,21-23' + codeRange);
+					highlightCode('15,22-24' + codeRange);
 
 					setTimeout(function () {
+						notification("Node found! Index = " + index , 'success');
 						current.setInnerClass('tada');
+						highlightCode('15,30-35' + codeRange);
 
-						notification("Node found!", 'success');
-						highlightCode('16,30-34' + codeRange);
-
-						if ( action ) {
-							action(current, nodePrev);
-						} else {
-							busy = false; // Enable controls
-							checkGoal('search', searchVal);
-						}
+						busy = false; // Enable controls
+						checkGoal('search', searchVal);
 					}, speed.normal);
 
-					clearInterval(searching);
 				} else {
-					highlightCode('16,21,24-26' + codeRange);
+					highlightCode('15,22,25-28' + codeRange);
 				}
 
 			}, speed.short);
 
 		} else {
-			notification("Data not found, linked list exhausted.", 'error');
-			highlightCode('16,28-29');
+			clearInterval(searching);
+			notification("Value not found, linked list exhausted.", 'error');
+			highlightCode('15,36-37');
 
 			refreshNodes();
 
 			current.setInnerClass('wobble');
 
 			busy = false;
-			clearInterval(searching);
 		}
 
 	}, speed.normal);
 };
 
-
-function searchIndex(index, action, codeRange) {
+function searchIndexAndDelete(searchInd, codeRange) {
 	if (codeRange === undefined)
 		codeRange = '';
 
 	// Point to head and highlight
-	var current = head;
+	var index = -1;
 	var nodePrev = false;
+	var current = head;
 	current.highlight = true;
 	refreshNodes();
 
-	notification("Starting search from head...");
-	highlightCode('16-19' + codeRange);
+	notification("Searching for node with index " + searchInd + "...");
+	highlightCode('39-43');
 
 	var searching = setInterval(function () {
 		current.highlight = false;
 
 		if ( current.next ) {
+			index++;
 			nodePrev = current;
 			current = current.next;
 
 			current.highlight = true;
 			refreshNodes();
 
-			highlightCode('16,21' + codeRange);
+			highlightCode('39,46' + codeRange);
 
 			setTimeout(function () {
-				// Found the value
-				if ( current.value == searchVal ) {
+				// Found the index
+				if ( index == searchInd ) {
+					clearInterval(searching);
 					current.highlight = false;
 
-					highlightCode('16,21-23' + codeRange);
+					highlightCode('39,46-48' + codeRange);
+					notification("Node found!", 'success');
 
 					setTimeout(function () {
 						current.setInnerClass('tada');
-
-						notification("Node found!", 'success');
-						highlightCode('16,30-34' + codeRange);
-
-						if ( action ) {
-							action(current, nodePrev);
-						} else {
-							busy = false; // Enable controls
-							checkGoal('search', searchVal);
-						}
+						deleteNode(current, nodePrev);
 					}, speed.normal);
-
-					clearInterval(searching);
 				} else {
-					highlightCode('16,21,24-26' + codeRange);
+					highlightCode('39,46,49-52' + codeRange);
 				}
 
 			}, speed.short);
 
 		} else {
+			clearInterval(searching);
 			notification("Data not found, linked list exhausted.", 'error');
-			highlightCode('16,28-29');
+			highlightCode('39,46,49-52');
 
 			refreshNodes();
-
 			current.setInnerClass('wobble');
 
 			busy = false;
-			clearInterval(searching);
 		}
 
 	}, speed.normal);
@@ -289,7 +259,7 @@ function deleteNode(node, nodePrev) {
 		nodePrev.updateLine(speed.updateLine);
 
 		notification("Set previous pointer to current's next.");
-		highlightCode('36,39-40');
+		highlightCode('39,54-55');
 	});
 	chain.add(speed.normal, function () {
 		notification("Delete successful! The node can't be accessed anymore by functions and will be garbage collected.", 'success');

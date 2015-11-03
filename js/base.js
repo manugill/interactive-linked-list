@@ -83,9 +83,9 @@ function calculateSizes() {
 	var screenWidth = $(window).width();
 	var screenHeight = $(window).height();
 
-	bound.top = $header.outerHeight() + 3;
+	bound.top = $header.outerHeight() + 53;
 	bound.left = $options.outerWidth() + 5;
-	bound.bottom = 40;
+	bound.bottom = 20;
 	bound.right = $code.outerWidth() + 5;
 
 	offset.top = $editor.offset().top;
@@ -118,15 +118,15 @@ $('#notification-switch').change(function () {
 		showNotifications = false;
 });
 
-$('#speed').change(function () {
+$('#speed-slider').on('change.fndtn.slider', function() {
 	$('body').removeClass('animations-fast animations-slow');
 
-	var value = $(this).val();
-	if ( value == 'slow' ) {
+	var value = $('#speed-value').val();
+	if ( value == 1 ) {
 		speed = {normal: 3000, short: 1500, updateLine: 500};
 		$('body').addClass('animations-slow');
-	} else if ( value == 'fast' ) {
-		speed = {normal: 80, short: 60, updateLine: 50};
+	} else if ( value == 3 ) {
+		speed = {normal: 100, short: 60, updateLine: 50};
 
 		$('body').addClass('animations-fast');
 		$('#notification-switch').removeAttr('checked').change();
@@ -144,4 +144,4 @@ $(document).foundation({
 		tip_animation_fade_speed : 200
 	}
 });
-//$(document).foundation('joyride', 'start');
+$(document).foundation('joyride', 'start');

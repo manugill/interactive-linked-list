@@ -22,11 +22,7 @@
 	<script src="js/vendor/prism.custom.js"></script>
 	<script src="js/vendor/snap.svg.js"></script>
 
-	<script src="js/vendor/foundation.js"></script>
-	<script src="js/vendor/foundation.joyride.js"></script>
-	<script src="js/vendor/foundation.tooltip.js"></script>
-	<script src="js/vendor/foundation.dropdown.js"></script>
-	<script src="js/vendor/foundation.slider.js"></script>
+	<script src="js/vendor/foundation.min.js"></script>
 	<script src="js/vendor/jquery.cookie.js"></script>
 
 </head>
@@ -47,8 +43,8 @@
 			</li>
 
 			<li>
-				<label for="speed">Speed</label>
-				<div class="range-slider radius" data-slider data-options="start: 1; end: 3; step: 1;">
+				<label>Speed</label>
+				<div id="speed-slider" class="range-slider radius" data-slider data-options="start: 1; end: 3; step: 1;">
 					<span class="range-slider-handle" role="slider" tabindex="0"></span>
 					<span class="range-slider-active-segment"></span>
 					<input id="speed-value" type="hidden">
@@ -60,55 +56,47 @@
 	<!-- Options -->
 	<div class="header-spacer">
 		<div id="options" class="animated slideInLeft">
-			<h4>Insert</h4>
-			<form id="insert" class="row collapse">
-				<div class="small-6 columns">
-					<input type="number" id="insert-text" value="30" required maxlength="3">
-				</div>
-				<div class="small-6 columns">
-					<button type="submit" class="success hollow"><i class="ion-ios-plus"></i></button>
-				</div>
-			</form>
+			<div class="box alt">
+				<h3 class="heading goal-heading animated">Goals <span class="right"><span class="goal-count">0</span>/<span class="goal-max">5</span></span></h3>
 
-			<hr>
-
-			<h4>Search</h4>
-			<form id="search" class="row collapse">
-				<div class="small-6 columns">
-					<input type="number" id="search-text" value="72" required maxlength="3">
-				</div>
-				<div class="small-6 columns">
-					<button type="submit" class="success hollow"><i class="ion-ios-search-strong"></i></button>
-				</div>
-			</form>
-
-			<hr>
-
-			<h4>Remove <small>by index</small></h4>
-			<form id="remove" class="row collapse">
-				<div class="small-6 columns">
-					<input type="number" id="remove-text" value="4" required maxlength="3">
-				</div>
-				<div class="small-6 columns">
-					<button type="submit" class="success hollow"><i class="ion-ios-close"></i></button>
-				</div>
-			</form>
-
-			<hr class="long">
-
-			<div id="goals">
-				<h3 class="heading animated">Goals (<span class="completed">0</span>/<span class="max">4</span>)</h3>
-				<div id="goal">
-					<h6><i class="ion-ios-bell"></i> Task <span class="count">1</span></h6>
-					<p class="text"></p>
-				</div>
-
-				<div class="progress">
-					<span class="meter success" style="width: 2%"></span>
-				</div>
+				<h1>Linked Lists</h1>
+				<h2 class="goal-title animated"></h2>
+				<p class="goal-text"></p>
 			</div>
 
-			<hr>
+			<h4 class="separator">Functions</h4>
+
+			<div class="box">
+				<h5>Insert</h5>
+				<form id="insert" class="row collapse" data-abide="ajax">
+					<div class="small-6 columns">
+						<input type="text" id="insert-text" value="30" required maxlength="3" pattern="integer">
+					</div>
+					<div class="small-6 columns">
+						<button type="submit"><i class="ion-ios-plus"></i></button>
+					</div>
+				</form>
+
+				<h5>Search</h5>
+				<form id="search" class="row collapse" data-abide="ajax">
+					<label class="small-6 columns">
+						<input type="text" id="search-text" value="72" required maxlength="3" pattern="integer">
+					</label>
+					<div class="small-6 columns">
+						<button type="submit"><i class="ion-ios-search-strong"></i></button>
+					</div>
+				</form>
+
+				<h5>Remove <small>by index</small></h5>
+				<form id="remove" class="row collapse" data-abide="ajax">
+					<div class="small-6 columns">
+						<input type="text" id="remove-text" value="4" required maxlength="3" pattern="integer">
+					</div>
+					<div class="small-6 columns">
+						<button type="submit"><i class="ion-ios-close"></i></button>
+					</div>
+				</form>
+			</div>
 
 		</div>
 	</div>
@@ -227,22 +215,21 @@ class LinkedList(object):
 			<p>The editor contains the head and the nodes, it represents the current state of the linked list.</p>
 			<p>You can drag on the first half of a node to move it, or on the right half of a node to move the pointer.</p>
 		</li>
-		<li data-id="jr2" data-prev-text="&lsaquo;" data-text="Next" data-options="tip_location:right;  nub_position:left;">
-			<h4>Functions &amp; Goals</h4>
-			<p>These are 3 functions you can execute on the list. As they are being performed, they will be highlighted on the editor.</p>
-			<p>Below the functions, are goals that you can complete. Feel free to finish them as you feel comfortable.</p>
+		<li data-id="jr2" data-prev-text="&lsaquo;" data-text="Next" data-options="tip_location:right; nub_position:left;">
+			<h4>Goals &amp; Functions</h4>
+			<p>There are goals that you can complete to familiarize yourself with the concepts.</p>
+			<p>Below the goals, there are functions you can execute on the list. As they are being executed, they will be highlighted on the editor. Use them to complete the goals.</p>
 		</li>
-		<li data-id="jr3" data-prev-text="&lsaquo;" data-text="Finish" data-options="tip_location:left;  nub_position:right;">
+		<li data-id="jr3" data-prev-text="&lsaquo;" data-text="Finish" data-options="tip_location:left; nub_position:right;">
 			<h4>Code &amp; Notifications</h4>
 			<p>While functions are being executed, they will be reflected in the code by highlighting the line being executed.</p>
 			<p>Along with this, there will be notifications popping up at the bottom of the screen that explain each step.</p>
-			<p>If you put the linked list in an invalid state, notifications 
-			<p class="show-for-medium-down"><strong>Your screen is currently too small to view the code. Please use the fullscreen option on Alexandria to be able to view the code highlighter on the right.</strong>
+			<p class="show-for-large-down"><strong>Your screen is currently too small to view the code. Please use the fullscreen option on Alexandria to be able to view the code highlighter on the right.</strong>
 		</li>
 	</ol>
 
 	<!-- Fullscreen alert -->
-	<div class="fullscreen-alert animated fadeInDown">Please switch to fullscreen or open the page on a larger screen for a better experience.</div>
+	<div class="fullscreen-alert animated fadeInDown">Please switch this interactive to fullscreen for a better experience.</div>
 
 </div>
 

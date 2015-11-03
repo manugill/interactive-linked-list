@@ -150,8 +150,9 @@ function nextNodeLoc() {
 	var found = false;
 	// Initial location
 	var x = 40 + bound.left;
-	var y = 80 + bound.top;
+	var y = 70 + bound.top;
 	var origY = y;
+	var alignedRun = true;
 
 	while (! found) {
 		matrix = new Snap.Matrix();
@@ -159,10 +160,19 @@ function nextNodeLoc() {
 		nextLoc = nodeLoc(matrix);
 
 		// Enlarge the rectangle by a little
-		nextLoc.start.x -= 40;
-		nextLoc.start.y -= 30;
-		nextLoc.end.x += 40;
-		nextLoc.end.y += 30;
+		if (alignedRun) {
+			nextLoc.start.x -= 35;
+			nextLoc.start.y -= 30;
+			nextLoc.end.x += 35;
+			nextLoc.end.y += 30;
+		} else {
+			nextLoc.start.x -= 5;
+			nextLoc.start.y -= 5;
+			nextLoc.end.x += 5;
+			nextLoc.end.y += 5;
+		}
+
+		console.l
 
 		collision = false;
 
@@ -176,18 +186,26 @@ function nextNodeLoc() {
 
 		if (collision == true) {
 			x += 20;
-			y += 1;
+			y += 2;
 
 			// Go to next line if we've reached a bound
-			if (nextLoc.end.x > offset.limitRight + 20) {
-				x = 150 + bound.left;
-				y = origY + 10;
-				origY = y;
+			if (nextLoc.end.x > offset.limitRight + 10) {
+				x = 100 + bound.left;
+				if (alignedRun) {
+					y += 20;
+				} else {
+					y = origY + 1;
+					origY = y;
+				}
 			}
 
 			// No more area left to explore
-			if (nextLoc.end.y > offset.limitBottom + 20)
-				return false;
+			if (nextLoc.end.y > offset.limitBottom) {
+				if (alignedRun)
+					alignedRun = false;
+				else
+					return false;
+			}
 
 		} else {
 			found = true;
@@ -290,7 +308,7 @@ function highlightCode(range) {
 	Prism.highlightElement(codeEl);
 
 	var lineHighlight = $('.line-highlight:first');
-	var offset = lineHighlight.offset().top + $code.scrollTop();
+	var offset = lineHighlight.offset().top + $code.scrollTop() - $code.offset().top;
 
 	$code.animate({
 		scrollTop: offset
