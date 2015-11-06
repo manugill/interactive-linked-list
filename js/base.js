@@ -140,7 +140,7 @@ $('#speed-slider').on('change.fndtn.slider', function() {
 // Joyride setup
 $(document).foundation({
 	joyride: {
-		cookie_monster: true,
+		cookie_monster: false,
 		tip_animation_fade_speed : 200
 	}
 });

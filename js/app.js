@@ -14,22 +14,22 @@ head.group.attr({
 var chain = new TimeoutChain();
 
 chain.add(200, function () {
-	n[0] = new node(40, bound.left + 130, bound.top + 180);
+	n[0] = new node(40, bound.left + 130, bound.top + 170);
 	head.connect(n[0]);
 	head.updateLine();
 });
 chain.add(200, function () {
-	n[1] = new node(16, bound.left + 160, bound.top + 290);
+	n[1] = new node(16, bound.left + 160, bound.top + 260);
 	n[0].connect(n[1]);
 	n[0].updateLine();
 });
 chain.add(200, function () {
-	n[2] = new node(55, bound.left + 190, bound.top + 400);
+	n[2] = new node(55, bound.left + 190, bound.top + 370);
 	n[1].connect(n[2]);
 	n[1].updateLine();
 });
 chain.add(200, function () {
-	n[3] = new node(72, bound.left + 220, bound.top + 510);
+	n[3] = new node(72, bound.left + 220, bound.top + 480);
 	n[2].connect(n[3]);
 	n[2].updateLine();
 
