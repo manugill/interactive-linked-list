@@ -137,7 +137,7 @@ $('#speed-slider').on('change.fndtn.slider', function() {
 
 
 
-// Joyride setup
+/* Joyride setup */
 $(document).foundation({
 	joyride: {
 		cookie_monster: false,
@@ -145,3 +145,11 @@ $(document).foundation({
 	}
 });
 $(document).foundation('joyride', 'start');
+
+// Joyride restart
+$('a[data-joyride-restart]').on('click', function (e){
+e.preventDefault();
+	$(document).foundation({
+		joyride : { 'cookie_monster': false }
+	}).foundation().foundation('joyride', 'start');
+});
